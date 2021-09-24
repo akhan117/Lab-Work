@@ -16,6 +16,7 @@ def spykeToNumpy(file_name, channels):
     segments = block.segments
     segment = segments[0]
 
+
     unit_boy = np.array([])
     time_check = False
 
@@ -63,7 +64,7 @@ def spykeToNumpy(file_name, channels):
         #     unit_boy = np.vstack([unit_boy, u3_data])
 
     # Return all the Channel data as an Array, and the Sampling data as well
-    return unit_boy, u_times
+    return unit_boy, u_times, segment.events[0]
 
 
 if __name__ == "__main__":
@@ -89,8 +90,8 @@ if __name__ == "__main__":
         channel_list = channel_name.split(",")
         for i in range(0, len(channel_list)): channel_list[i] = channel_list[i].strip()
 
-    u_data1, u_times1 = spykeToNumpy(file_name1, channel_list)
-    u_data2, u_times2 = spykeToNumpy(file_name2, channel_list)
+    u_data1, u_times1, events1 = spykeToNumpy(file_name1, channel_list)
+    u_data2, u_times2, events2 = spykeToNumpy(file_name2, channel_list)
 
     # The post and pre infusion files have roughly the same number as samples (time spent recording), but we need them
     # to be exactly the same. So we must determine which is the shorter one and make them both the same length.
@@ -108,6 +109,19 @@ if __name__ == "__main__":
     # Combine unit/ lfp files from both files into the final numpy array, and save it
     # u_final = np.vstack([u_times1, u_data1])
     # u_final = np.vstack([u_final, u_data2])
+
+    with open("Events.txt", 'w') as f:
+        f.write("FILE:" + file_name1.split('\\')[-1:][0] + '\n' + '\n')
+        for event in range(0, len(events1.times)):
+            combi = "at " + str(events1.times[event]) + ", " + str(events1.labels[event])[2:-1] + '\n'
+            f.write(combi)
+
+        f.write(" " + '\n' + '\n' + '\n')
+
+        f.write("FILE:" + file_name2.split('\\')[-1:][0] + '\n' + '\n')
+        for event in range(0, len(events2.times)):
+            combi = "at " + str(events2.times[event]) + ", " + str(events2.labels[event])[2:-1] + '\n'
+            f.write(combi)
 
     u_final = np.vstack([u_data1, u_data2])
     print(np.shape(u_final))
