@@ -16,7 +16,6 @@ def spykeToNumpy(file_name, channels):
     segments = block.segments
     segment = segments[0]
 
-
     unit_boy = np.array([])
     time_check = False
 
@@ -63,7 +62,7 @@ def spykeToNumpy(file_name, channels):
         #     u3_data = np.squeeze(sig)
         #     unit_boy = np.vstack([unit_boy, u3_data])
 
-    # Return all the Channel data as an Array, and the Sampling data as well
+    # Return all the Channel data as an Array, the Sampling data and the events
     return unit_boy, u_times, segment.events[0]
 
 
@@ -110,6 +109,7 @@ if __name__ == "__main__":
     # u_final = np.vstack([u_times1, u_data1])
     # u_final = np.vstack([u_final, u_data2])
 
+    # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
         f.write("FILE:" + file_name1.split('\\')[-1:][0] + '\n' + '\n')
         for event in range(0, len(events1.times)):
@@ -124,5 +124,4 @@ if __name__ == "__main__":
             f.write(combi)
 
     u_final = np.vstack([u_data1, u_data2])
-    print(np.shape(u_final))
     np.save(save_to, u_final)
