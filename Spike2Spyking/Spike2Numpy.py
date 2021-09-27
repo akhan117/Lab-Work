@@ -1,5 +1,6 @@
 import numpy as np
 from neo import Spike2IO  # neo v.0.6.1
+import pickle
 
 
 # Written by Ayaan Khan
@@ -8,7 +9,7 @@ from neo import Spike2IO  # neo v.0.6.1
 # Upon running, this program will create a config file and exit. Fill in the config file with the parameters it needs
 # and run the program again
 
-def spykeToNumpy(file_name, channels):
+def spykeToNumpy(file_name):
     # Typical Set up for Neo to access the file, and we only have one block and one segment
     spike2_reader = Spike2IO(file_name)
     blocks = spike2_reader.read()
@@ -16,54 +17,65 @@ def spykeToNumpy(file_name, channels):
     segments = block.segments
     segment = segments[0]
 
-    unit_boy = np.array([])
+    channels_data = np.array([])
     time_check = False
+    name_rate = np.array([])
+    data_len = 0
+
+    for sig in segment.analogsignals:
+        channel_data = np.squeeze(sig)
+        name_rate = np.append(name_rate, (sig.annotations['channel_names'][0], str(sig.sampling_rate)))
+        data_len = max(data_len, len(channel_data))
+
+        if not time_check:
+            channels_data = [channel_data]
+            time_check = True
+
+        else:
+            if len(channels_data[0]) < data_len:
+                c, rows = np.shape(channels_data)
+                none_array = np.full([c, data_len - rows], np.Inf)
+                channels_data = np.concatenate((channels_data, none_array), axis=1)
+
+            channels_data = np.vstack([channels_data, channel_data])
+
+    return channels_data, segment.events[0], name_rate
 
     # Iterate through the channel names
-    for sig in segment.analogsignals:
-
-        for chan in channels:
-
-            # Pick out the Channel names we're interested in
-            if sig.annotations['channel_names'][0] == chan:
-
-                # Check to see if we've already picked up the sampling data - we only want it once
-                if not time_check:
-
-                    # We print the sampling rate as it's required for SpyKingCircus
-                    sampling_rate = sig.sampling_rate
-                    print("The Sampling Rate is", end=" ")
-                    print(sampling_rate)
-
-                    # Extract sampling data and unit/lfp data
-                    u_times = sig.times
-                    u_data = np.squeeze(sig)
-                    unit_boy = [u_data]
-                    time_check = True
-
-                else:
-                    # Only Extract unit/lfp data, and we add it as an additional row to our existing Array
-                    u1_data = np.squeeze(sig)
-                    unit_boy = np.vstack([unit_boy, u1_data])
-
-        # if sig.annotations['channel_names'][0] == 'U1':
-        #     sampling_rate = sig.sampling_rate
-        #     print(sampling_rate)
-        #     u_times = sig.times
-        #     u1_data = np.squeeze(sig)
-        #     unit_boy = [u1_data]
-        #
-        # elif sig.annotations['channel_names'][0] == 'U2':
-        #
-        #     u2_data = np.squeeze(sig)
-        #     unit_boy = np.vstack([unit_boy, u2_data])
-        #
-        # elif sig.annotations['channel_names'][0] == 'U3':
-        #     u3_data = np.squeeze(sig)
-        #     unit_boy = np.vstack([unit_boy, u3_data])
-
-    # Return all the Channel data as an Array, the Sampling data and the events
-    return unit_boy, u_times, segment.events[0]
+    # for sig in segment.analogsignals:
+    #
+    #     for chan in channels:
+    #
+    #         # Pick out the Channel names we're interested in
+    #         if sig.annotations['channel_names'][0] == chan:
+    #
+    #             # Check to see if we've already picked up the sampling data - we only want it once
+    #             if not time_check:
+    #
+    #                 # We print the sampling rate as it's required for SpyKingCircus
+    #                 sampling_rate = sig.sampling_rate
+    #                 print("The Sampling Rate is", end=" ")
+    #                 print(sampling_rate)
+    #
+    #                 # Extract sampling data and unit/lfp data
+    #                 u_times = sig.times
+    #                 u_data = np.squeeze(sig)
+    #                 print(sig.annotations['channel_names'][0])
+    #                 print(len(u_data))
+    #                 unit_boy = [u_data]
+    #                 time_check = True
+    #
+    #             else:
+    #                 # Only Extract unit/lfp data, and we add it as an additional row to our existing Array
+    #                 print(sig.annotations['channel_names'][0] + ' ' + str(sig.sampling_rate))
+    #                 print(len(sig.times))
+    #                 print(len(sig))
+    #                 u1_data = np.squeeze(sig)
+    #
+    #                 print(len(u1_data))
+    #                 unit_boy = np.vstack([unit_boy, u1_data])
+    #
+    # return unit_boy, u_times, segment.events[0]
 
 
 if __name__ == "__main__":
@@ -87,41 +99,28 @@ if __name__ == "__main__":
 
         # Save the Channels we need as a list for iteration
         channel_list = channel_name.split(",")
-        for i in range(0, len(channel_list)): channel_list[i] = channel_list[i].strip()
+        for i in range(0, len(channel_list)):
+            channel_list[i] = channel_list[i].strip()
 
-    u_data1, u_times1, events1 = spykeToNumpy(file_name1, channel_list)
-    u_data2, u_times2, events2 = spykeToNumpy(file_name2, channel_list)
+    u_data1, events1, name_and_rate = spykeToNumpy(file_name1)
+    u_data2, events2, name_and_rate2 = spykeToNumpy(file_name2)
 
-    # The post and pre infusion files have roughly the same number as samples (time spent recording), but we need them
-    # to be exactly the same. So we must determine which is the shorter one and make them both the same length.
-    cut_off = min(len(u_times1), len(u_times2))
-    u_times1 = u_times1[:cut_off]
-    u_times2 = u_times2[:cut_off]
-
-    # Making sure the larger unit/lfp data set falls in line with the amount of samples
-    if len(u_data1[0]) < len(u_data2[0]):
-        u_data2 = np.delete(u_data2, range(len(u_data1[0]), len(u_data2[0])), axis=1)
-
-    elif len(u_data2[0]) < len(u_data1[0]):
-        u_data1 = np.delete(u_data1, range(len(u_data2[0]), len(u_data1[0])), axis=1)
-
-    # Combine unit/ lfp files from both files into the final numpy array, and save it
-    # u_final = np.vstack([u_times1, u_data1])
-    # u_final = np.vstack([u_final, u_data2])
+    u_data_final = np.concatenate((u_data1, u_data2), axis=1)
 
     # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
         f.write("FILE:" + file_name1.split('\\')[-1:][0] + '\n' + '\n')
         for event in range(0, len(events1.times)):
-            combi = "at " + str(events1.times[event]) + ", " + str(events1.labels[event])[2:-1] + '\n'
-            f.write(combi)
+            f.write("at " + str(events1.times[event]) + ", " + str(events1.labels[event])[2:-1] + '\n')
 
         f.write(" " + '\n' + '\n' + '\n')
 
         f.write("FILE:" + file_name2.split('\\')[-1:][0] + '\n' + '\n')
         for event in range(0, len(events2.times)):
-            combi = "at " + str(events2.times[event]) + ", " + str(events2.labels[event])[2:-1] + '\n'
-            f.write(combi)
+            f.write("at " + str(events2.times[event]) + ", " + str(events2.labels[event])[2:-1] + '\n')
 
-    u_final = np.vstack([u_data1, u_data2])
-    np.save(save_to, u_final)
+    with open("Channels.txt", 'w') as f:
+        for ele in name_and_rate:
+            f.write(str(ele) + '\n')
+
+    np.save(save_to, u_data_final)
