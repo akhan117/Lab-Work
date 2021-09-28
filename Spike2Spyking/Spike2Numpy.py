@@ -22,8 +22,11 @@ def spykeToNumpy(file_name):
     name_rate = np.array([])
     data_len = 0
 
+    # Go through all the channels, and add the data from each to the array
     for sig in segment.analogsignals:
         channel_data = np.squeeze(sig)
+
+        # Saving the channel names and sampling rate
         name_rate = np.append(name_rate, (sig.annotations['channel_names'][0], str(sig.sampling_rate)))
         data_len = max(data_len, len(channel_data))
 
@@ -34,6 +37,8 @@ def spykeToNumpy(file_name):
         else:
             if len(channels_data[0]) < data_len:
                 c, rows = np.shape(channels_data)
+                
+                # Pad if necessary - not all channels have the same amount of samples
                 none_array = np.full([c, data_len - rows], np.Inf)
                 channels_data = np.concatenate((channels_data, none_array), axis=1)
 
@@ -105,6 +110,7 @@ if __name__ == "__main__":
     u_data1, events1, name_and_rate = spykeToNumpy(file_name1)
     u_data2, events2, name_and_rate2 = spykeToNumpy(file_name2)
 
+    # Combine the data from the two files
     u_data_final = np.concatenate((u_data1, u_data2), axis=1)
 
     # Organize the events by time and save them
@@ -119,6 +125,7 @@ if __name__ == "__main__":
         for event in range(0, len(events2.times)):
             f.write("at " + str(events2.times[event]) + ", " + str(events2.labels[event])[2:-1] + '\n')
 
+    # Save the channel names and sampling rates
     with open("Channels.txt", 'w') as f:
         for ele in name_and_rate:
             f.write(str(ele) + '\n')
