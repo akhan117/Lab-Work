@@ -1,17 +1,10 @@
 import numpy as np
 
-
 # Written by Ayaan Khan
 # This program extracts the channels you specify from the data Spike2Numpy. This program will not run correctly
 # without running Spike2Numpy and obtaining the data that it creates!
 
 if __name__ == "__main__":
-
-    # Accept the channels, put them into a list.
-    val = input("Enter the channels (e.g - U1, U2, U3): ")
-    val = val.split(',')
-    for i in range(0, len(val)):
-        val[i] = val[i].strip()
 
     # Obtain the indexes for the channels we need
     with open("Channels.txt", 'r') as f:
@@ -20,36 +13,62 @@ if __name__ == "__main__":
     data = data.split('\n')
     data = data[::2]
 
+    # Find out where the Spike2Numpy array is stored at and load it. Also save the extracted file to that location.
+    with open("Config.txt", 'r') as f:
+        file_name1 = f.readline()[:-1]
+        file_name2 = f.readline()[:-1]
+        location = f.readline()
+        channel_name = f.readline()
+
+        if channel_name[-1:] == '\n':
+            channel_name = channel_name[:-1]
+
+        # Save the Channels we need as a list for iteration
+        channel_list = channel_name.split(",")
+        for i in range(0, len(channel_list)):
+            channel_list[i] = channel_list[i].strip()
+
     index_array = []
     for i in range(0, len(data)):
 
-        for e in val:
+        for e in channel_list:
             if data[i] == e:
-                val.remove(e)
+                channel_list.remove(e)
                 index_array.append(i)
 
-    if len(val) >= 0:
-        for i in val:
+    if len(channel_list) >= 0:
+        for i in channel_list:
             print('Channel ' + i + ' was not found')
-
-    # Find out where the Spike2Numpy array is stored at and load it. Also save the extracted file to that location.
-    with open("Config.txt", 'r') as f:
-        location = f.readline()
-        location = f.readline()
-        location = f.readline()
 
     location2 = location[:-1]
     if '\\' in location2:
 
         last_slash = location2.rindex('\\')
         location2 = location2[:last_slash]
-        location2 = location2 + '\\' + 'extracted_channels'
+        location3 = location2[:last_slash]
+        print(location3)
+        location2 = location2 + '\\'
 
     else:
-        location2 = 'extracted_channels'
+        location2 = ''
 
     location = location[:-1] + ".npy"
-    combined_data = np.load(location)
+
+    if '\\' in file_name1:
+        last_slash = file_name1.rindex('\\')
+        file_name1 = file_name1[last_slash + 1:]
+
+    if '\\' in file_name2:
+        last_slash = file_name2.rindex('\\')
+        file_name2 = file_name2[last_slash + 1:]
+
+    file_name1 = file_name1[:-4]
+    file_name2 = file_name2[:-4]
+    porpoise = "combined - " + file_name1 + " and " + file_name2 + ".npy"
+    porpoise2 = location3 + '\\' + porpoise
+    print(porpoise2)
+    location2 = location2 + channel_name + " " + porpoise
+    combined_data = np.load(porpoise2)
 
     # Extract the channels we need and save the array
     check = 0
@@ -61,4 +80,5 @@ if __name__ == "__main__":
         else:
             u_data = np.vstack([u_data, combined_data[i]])
 
+    print(np.shape(u_data))
     np.save(location2, u_data)

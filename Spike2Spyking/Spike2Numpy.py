@@ -1,5 +1,6 @@
 import numpy as np
 from neo import Spike2IO  # neo v.0.6.1
+import paramSetUp
 import pickle
 
 
@@ -37,7 +38,7 @@ def spykeToNumpy(file_name):
         else:
             if len(channels_data[0]) < data_len:
                 c, rows = np.shape(channels_data)
-                
+
                 # Pad if necessary - not all channels have the same amount of samples
                 none_array = np.full([c, data_len - rows], np.Inf)
                 channels_data = np.concatenate((channels_data, none_array), axis=1)
@@ -45,6 +46,7 @@ def spykeToNumpy(file_name):
             channels_data = np.vstack([channels_data, channel_data])
 
     return channels_data, segment.events[0], name_rate
+
 
     # Iterate through the channel names
     # for sig in segment.analogsignals:
@@ -96,17 +98,6 @@ if __name__ == "__main__":
         file_name2 = f.readline()[:-1]
         save_to = f.readline()[:-1]
 
-        # Last line may or may not have a newline, so shave depending on that
-        channel_name = f.readline()
-
-        if channel_name[-1:] == '\n':
-            channel_name = channel_name[:-1]
-
-        # Save the Channels we need as a list for iteration
-        channel_list = channel_name.split(",")
-        for i in range(0, len(channel_list)):
-            channel_list[i] = channel_list[i].strip()
-
     u_data1, events1, name_and_rate = spykeToNumpy(file_name1)
     u_data2, events2, name_and_rate2 = spykeToNumpy(file_name2)
 
@@ -129,5 +120,19 @@ if __name__ == "__main__":
     with open("Channels.txt", 'w') as f:
         for ele in name_and_rate:
             f.write(str(ele) + '\n')
+
+    if '\\' in file_name1:
+        last_slash = file_name1.rindex('\\')
+        file_name1 = file_name1[last_slash + 1:]
+
+    if '\\' in file_name2:
+        last_slash = file_name2.rindex('\\')
+        file_name2 = file_name2[last_slash + 1:]
+
+    file_name1 = file_name1[:-4]
+    file_name2 = file_name2[:-4]
+    print(file_name1)
+    print(file_name2)
+    save_to = save_to + "combined - " + file_name1 + " and " + file_name2
 
     np.save(save_to, u_data_final)
