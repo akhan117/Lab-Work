@@ -41,12 +41,15 @@ if __name__ == "__main__":
             print('Channel ' + i + ' was not found')
 
     location2 = location[:-1]
+    print(location2)
+    if location2[:-1] != '\\':
+        location2 = location2 + '\\'
+
     if '\\' in location2:
 
         last_slash = location2.rindex('\\')
         location2 = location2[:last_slash]
         location3 = location2[:last_slash]
-        print(location3)
         location2 = location2 + '\\'
 
     else:
@@ -66,7 +69,6 @@ if __name__ == "__main__":
     file_name2 = file_name2[:-4]
     porpoise = "combined - " + file_name1 + " and " + file_name2 + ".npy"
     porpoise2 = location3 + '\\' + porpoise
-    print(porpoise2)
     location2 = location2 + channel_name + " " + porpoise
     combined_data = np.load(porpoise2)
 

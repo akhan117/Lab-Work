@@ -47,7 +47,6 @@ def spykeToNumpy(file_name):
 
     return channels_data, segment.events[0], name_rate
 
-
     # Iterate through the channel names
     # for sig in segment.analogsignals:
     #
@@ -101,6 +100,8 @@ if __name__ == "__main__":
     u_data1, events1, name_and_rate = spykeToNumpy(file_name1)
     u_data2, events2, name_and_rate2 = spykeToNumpy(file_name2)
 
+    print(np.shape(u_data1))
+    print(np.shape(u_data2))
     # Combine the data from the two files
     u_data_final = np.concatenate((u_data1, u_data2), axis=1)
 
@@ -133,6 +134,9 @@ if __name__ == "__main__":
     file_name2 = file_name2[:-4]
     print(file_name1)
     print(file_name2)
-    save_to = save_to + "combined - " + file_name1 + " and " + file_name2
+    if save_to[:-1] == '\\':
+        save_to = save_to + "combined - " + file_name1 + " and " + file_name2
+    else:
+        save_to = save_to + '\\' + ''"combined - " + file_name1 + " and " + file_name2
 
     np.save(save_to, u_data_final)
