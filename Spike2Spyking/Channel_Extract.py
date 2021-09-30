@@ -65,8 +65,12 @@ if __name__ == "__main__":
         last_slash = file_name2.rindex('\\')
         file_name2 = file_name2[last_slash + 1:]
 
-    file_name1 = file_name1[:-4]
-    file_name2 = file_name2[:-4]
+    if file_name1[-4:] == '.smr':
+        file_name1 = file_name1[:-4]
+
+    if file_name2[-4:] == '.smr':
+        file_name2 = file_name2[:-4]
+
     porpoise = "combined - " + file_name1 + " and " + file_name2 + ".npy"
     porpoise2 = location3 + '\\' + porpoise
     location2 = location2 + channel_name + " " + porpoise

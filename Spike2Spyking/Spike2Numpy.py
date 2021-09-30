@@ -94,7 +94,14 @@ if __name__ == "__main__":
         # We want the Post and Pre infusion readings, so we take in two spike files
         # Shave off the newline at the end
         file_name1 = f.readline()[:-1]
+        if file_name1[-4:] != '.smr':
+            print("hi")
+            file_name1 = file_name1 + '.smr'
+
         file_name2 = f.readline()[:-1]
+        if file_name2[-4:] != '.smr':
+            file_name2 = file_name2 + '.smr'
+
         save_to = f.readline()[:-1]
 
     u_data1, events1, name_and_rate = spykeToNumpy(file_name1)
