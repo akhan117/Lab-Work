@@ -10,7 +10,7 @@ import pickle
 # Upon running, this program will create a config file and exit. Fill in the config file with the parameters it needs
 # and run the program again
 
-def spykeToNumpy(file_name):
+def spyke_to_numpy(file_name):
     # Typical Set up for Neo to access the file, and we only have one block and one segment
     spike2_reader = Spike2IO(file_name)
     blocks = spike2_reader.read()
@@ -47,42 +47,6 @@ def spykeToNumpy(file_name):
 
     return channels_data, segment.events[0], name_rate
 
-    # Iterate through the channel names
-    # for sig in segment.analogsignals:
-    #
-    #     for chan in channels:
-    #
-    #         # Pick out the Channel names we're interested in
-    #         if sig.annotations['channel_names'][0] == chan:
-    #
-    #             # Check to see if we've already picked up the sampling data - we only want it once
-    #             if not time_check:
-    #
-    #                 # We print the sampling rate as it's required for SpyKingCircus
-    #                 sampling_rate = sig.sampling_rate
-    #                 print("The Sampling Rate is", end=" ")
-    #                 print(sampling_rate)
-    #
-    #                 # Extract sampling data and unit/lfp data
-    #                 u_times = sig.times
-    #                 u_data = np.squeeze(sig)
-    #                 print(sig.annotations['channel_names'][0])
-    #                 print(len(u_data))
-    #                 unit_boy = [u_data]
-    #                 time_check = True
-    #
-    #             else:
-    #                 # Only Extract unit/lfp data, and we add it as an additional row to our existing Array
-    #                 print(sig.annotations['channel_names'][0] + ' ' + str(sig.sampling_rate))
-    #                 print(len(sig.times))
-    #                 print(len(sig))
-    #                 u1_data = np.squeeze(sig)
-    #
-    #                 print(len(u1_data))
-    #                 unit_boy = np.vstack([unit_boy, u1_data])
-    #
-    # return unit_boy, u_times, segment.events[0]
-
 
 if __name__ == "__main__":
 
@@ -95,7 +59,6 @@ if __name__ == "__main__":
         # Shave off the newline at the end
         file_name1 = f.readline()[:-1]
         if file_name1[-4:] != '.smr':
-            print("hi")
             file_name1 = file_name1 + '.smr'
 
         file_name2 = f.readline()[:-1]
@@ -104,11 +67,9 @@ if __name__ == "__main__":
 
         save_to = f.readline()[:-1]
 
-    u_data1, events1, name_and_rate = spykeToNumpy(file_name1)
-    u_data2, events2, name_and_rate2 = spykeToNumpy(file_name2)
+    u_data1, events1, name_and_rate = spyke_to_numpy(file_name1)
+    u_data2, events2, name_and_rate2 = spyke_to_numpy(file_name2)
 
-    print(np.shape(u_data1))
-    print(np.shape(u_data2))
     # Combine the data from the two files
     u_data_final = np.concatenate((u_data1, u_data2), axis=1)
 
@@ -139,8 +100,7 @@ if __name__ == "__main__":
 
     file_name1 = file_name1[:-4]
     file_name2 = file_name2[:-4]
-    print(file_name1)
-    print(file_name2)
+
     if save_to[:-1] == '\\':
         save_to = save_to + "combined - " + file_name1 + " and " + file_name2
     else:

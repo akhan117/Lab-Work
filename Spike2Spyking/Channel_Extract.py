@@ -41,7 +41,6 @@ if __name__ == "__main__":
             print('Channel ' + i + ' was not found')
 
     location2 = location[:-1]
-    print(location2)
     if location2[:-1] != '\\':
         location2 = location2 + '\\'
 
@@ -86,5 +85,4 @@ if __name__ == "__main__":
         else:
             u_data = np.vstack([u_data, combined_data[i]])
 
-    print(np.shape(u_data))
     np.save(location2, u_data)
