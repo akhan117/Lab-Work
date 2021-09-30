@@ -1,4 +1,4 @@
-Q:\Work\Lab Work\Spike2 Data\ParameterTest_OE7_091719_Preinfusion.smr
-Q:\Work\Lab Work\Spike2 Data\ParameterTest_OE7_091719_Postinfusion.smr
-Q:\Work\Lab Work\Spike2 Data\Numpy Arrays
-U1_PC, U2_PC, U3_PC, U4_PC
+C:\Ayaan Data\CCH_R10_pre_071221
+C:\Ayaan Data\CCH_R10_post_071221
+C:\Ayaan Data\Numpy Arrays
+U1_PC, U2_PC, U3_PC, U4

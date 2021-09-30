@@ -1,11 +1,13 @@
 import numpy as np
 from neo import Spike2IO  # neo v.0.6.1
+import h5py
 import paramSetUp
 import pickle
 
 
 # Written by Ayaan Khan
-# This program takes data from two smr (Spike2) data files and combines them into an numpy array.
+# This program takes data from two smr (Spike2) data files and combines them into an numpy array, which is saved to an
+# hdf5 file.
 # This is so that we can combine post and pre infusion readings into a single file.
 # Upon running, this program will create a config file and exit. Fill in the config file with the parameters it needs
 # and run the program again
@@ -58,10 +60,12 @@ if __name__ == "__main__":
         # We want the Post and Pre infusion readings, so we take in two spike files
         # Shave off the newline at the end
         file_name1 = f.readline()[:-1]
+        file_name2 = f.readline()[:-1]
+
+        # To make sure the file names includes the extension, add .smr to the end if it's not already there
         if file_name1[-4:] != '.smr':
             file_name1 = file_name1 + '.smr'
 
-        file_name2 = f.readline()[:-1]
         if file_name2[-4:] != '.smr':
             file_name2 = file_name2 + '.smr'
 
@@ -72,7 +76,6 @@ if __name__ == "__main__":
 
     # Combine the data from the two files
     u_data_final = np.concatenate((u_data1, u_data2), axis=1)
-
     # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
         f.write("FILE:" + file_name1.split('\\')[-1:][0] + '\n' + '\n')
@@ -90,6 +93,7 @@ if __name__ == "__main__":
         for ele in name_and_rate:
             f.write(str(ele) + '\n')
 
+    # Obtain JUST the file name of the the spike2 files to know what to name our new file.
     if '\\' in file_name1:
         last_slash = file_name1.rindex('\\')
         file_name1 = file_name1[last_slash + 1:]
@@ -98,12 +102,19 @@ if __name__ == "__main__":
         last_slash = file_name2.rindex('\\')
         file_name2 = file_name2[last_slash + 1:]
 
+    # Remove the extension if the user included it in the config file
     file_name1 = file_name1[:-4]
     file_name2 = file_name2[:-4]
 
+    # If the folder to save_to ends with \, then simply add .hdf5 to the end of the name and save it,
+    # otherwise the backslash has to be added to have a legitimate directory
     if save_to[:-1] == '\\':
-        save_to = save_to + "combined - " + file_name1 + " and " + file_name2
+        save_to = save_to + "combined - " + file_name1 + " and " + file_name2 + ".hdf5"
     else:
-        save_to = save_to + '\\' + ''"combined - " + file_name1 + " and " + file_name2
+        save_to = save_to + '\\' + ''"combined - " + file_name1 + " and " + file_name2 + ".hdf5"
 
-    np.save(save_to, u_data_final)
+    # Saved as an hdf5 file, for compressions sake
+    with h5py.File(save_to, 'w') as f:
+        f.create_dataset("test", np.shape(u_data_final), data=u_data_final, compression="gzip")
+
+

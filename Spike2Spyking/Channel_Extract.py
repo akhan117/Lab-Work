@@ -1,4 +1,5 @@
 import numpy as np
+import h5py
 
 # Written by Ayaan Khan
 # This program extracts the channels you specify from the data Spike2Numpy. This program will not run correctly
@@ -29,6 +30,7 @@ if __name__ == "__main__":
             channel_list[i] = channel_list[i].strip()
 
     index_array = []
+    # Save the index of the channels that are there and remove them from channel_list.
     for i in range(0, len(data)):
 
         for e in channel_list:
@@ -36,26 +38,25 @@ if __name__ == "__main__":
                 channel_list.remove(e)
                 index_array.append(i)
 
+    # If the channels are still in channel_list, then that means there were not in the original spike2 file.
     if len(channel_list) >= 0:
         for i in channel_list:
             print('Channel ' + i + ' was not found')
 
-    location2 = location[:-1]
-    if location2[:-1] != '\\':
-        location2 = location2 + '\\'
+    # Silly string manipulation to make sure that we can obtain the folder containing the file name and also
+    # the name of the file itself.
 
-    if '\\' in location2:
+    # Remove newline
+    location = location[:-1]
 
-        last_slash = location2.rindex('\\')
-        location2 = location2[:last_slash]
-        location3 = location2[:last_slash]
-        location2 = location2 + '\\'
+    if location[:-1] != '\\':
+        location = location + '\\'
 
-    else:
-        location2 = ''
+    last_slash = location.rindex('\\')
+    location = location[:last_slash]
+    location = location + '\\'
 
-    location = location[:-1] + ".npy"
-
+    # Obtain JUST the file name of the the spike2 files to know what to name our new file.
     if '\\' in file_name1:
         last_slash = file_name1.rindex('\\')
         file_name1 = file_name1[last_slash + 1:]
@@ -64,16 +65,23 @@ if __name__ == "__main__":
         last_slash = file_name2.rindex('\\')
         file_name2 = file_name2[last_slash + 1:]
 
+    # Remove the extension if the user included it in the config file
     if file_name1[-4:] == '.smr':
         file_name1 = file_name1[:-4]
 
     if file_name2[-4:] == '.smr':
         file_name2 = file_name2[:-4]
 
-    porpoise = "combined - " + file_name1 + " and " + file_name2 + ".npy"
-    porpoise2 = location3 + '\\' + porpoise
-    location2 = location2 + channel_name + " " + porpoise
-    combined_data = np.load(porpoise2)
+    # Recreate the combined file name, so we can load it and prepare the save_to location as well
+    read_from = "combined - " + file_name1 + " and " + file_name2
+    read_from2 = location + read_from + ".hdf5"
+    location = location + channel_name + " " + read_from + ".hdf5"
+
+    # Read the combined file so we can extract the channels
+    f = h5py.File(read_from2, 'r+')
+    combined_data = f["test"]
+
+    print(np.shape(combined_data))
 
     # Extract the channels we need and save the array
     check = 0
@@ -85,4 +93,8 @@ if __name__ == "__main__":
         else:
             u_data = np.vstack([u_data, combined_data[i]])
 
-    np.save(location2, u_data)
+    f.close()
+
+    # Save the file with the extracted channels
+    with h5py.File(location, 'w') as f:
+        f.create_dataset("test", np.shape(u_data), data=u_data, compression="gzip")
