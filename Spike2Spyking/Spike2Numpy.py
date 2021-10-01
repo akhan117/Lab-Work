@@ -20,40 +20,23 @@ def spyke_to_numpy(file_name):
     segments = block.segments
     segment = segments[0]
 
-    channels_data = np.array([])
-    time_check = False
+    channels_data = {}
     name_rate = np.array([])
-    data_len = 0
 
-    # Go through all the channels, and add the data from each to the array
+    # Go through all the channels, and add the data from each to the dictionary
     for sig in segment.analogsignals:
+
         channel_data = np.squeeze(sig)
+        channel_name = sig.annotations['channel_names'][0]
+        channels_data[channel_name] = channel_data
 
         # Saving the channel names and sampling rate
         name_rate = np.append(name_rate, (sig.annotations['channel_names'][0], str(sig.sampling_rate)))
-        data_len = max(data_len, len(channel_data))
-
-        if not time_check:
-            channels_data = [channel_data]
-            time_check = True
-
-        else:
-            if len(channels_data[0]) < data_len:
-                c, rows = np.shape(channels_data)
-
-                # Pad if necessary - not all channels have the same amount of samples
-                none_array = np.full([c, data_len - rows], np.Inf)
-                channels_data = np.concatenate((channels_data, none_array), axis=1)
-
-            channels_data = np.vstack([channels_data, channel_data])
 
     return channels_data, segment.events[0], name_rate
 
 
 if __name__ == "__main__":
-
-    file_name1 = ""
-    file_name2 = ""
 
     # Read the data we want from the config file
     with open("Config.txt", 'r') as f:
@@ -75,7 +58,10 @@ if __name__ == "__main__":
     u_data2, events2, name_and_rate2 = spyke_to_numpy(file_name2)
 
     # Combine the data from the two files
-    u_data_final = np.concatenate((u_data1, u_data2), axis=1)
+    u_data_final = {}
+    for i in list(u_data1):
+        u_data_final[i] = np.concatenate((u_data1[i], u_data2[i]))
+
     # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
         f.write("FILE:" + file_name1.split('\\')[-1:][0] + '\n' + '\n')
@@ -115,6 +101,6 @@ if __name__ == "__main__":
 
     # Saved as an hdf5 file, for compressions sake
     with h5py.File(save_to, 'w') as f:
-        f.create_dataset("test", np.shape(u_data_final), data=u_data_final, compression="gzip")
-
+        for i in list(u_data_final):
+            f.create_dataset(i, len(u_data_final[i]), data=u_data_final[i], compression="gzip")
 
