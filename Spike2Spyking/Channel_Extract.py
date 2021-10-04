@@ -1,5 +1,7 @@
 import numpy as np
 import h5py
+import ntpath
+import platform
 
 # Written by Ayaan Khan
 # This program extracts the channels you specify from the data Spike2Numpy. This program will not run correctly
@@ -9,8 +11,11 @@ if __name__ == "__main__":
 
     # Find out where the Spike2Numpy array is stored at and load it. Also save the extracted file to that location.
     with open("Config.txt", 'r') as f:
-        file_name1 = f.readline()[:-1]
-        file_name2 = f.readline()[:-1]
+        file_name = f.readline()[:-1]
+        file_list = file_name.split(",")
+        for i in range(0, len(file_list)):
+            file_list[i] = file_list[i].strip()
+
         location = f.readline()
         channel_name = f.readline()
 
@@ -25,34 +30,30 @@ if __name__ == "__main__":
     # Silly string manipulation to make sure that we can obtain the folder containing the file name and also
     # the name of the file itself.
 
+    # Obtain JUST the file name of the the spike2 files to know where our file is
+    file_list = [ntpath.basename(file) for file in file_list]
+    for i in range(0, len(file_list)):
+        if '.smr' in file_list[i]:
+            file_list[i] = file_list[i][:-4]
+
+    print(file_list)
+
     # Remove newline
     location = location[:-1]
 
-    if location[:-1] != '\\':
-        location = location + '\\'
+    if platform.system() == "Windows":
+        if location[:-1] != '\\':
+            location = location + '\\'
 
-    last_slash = location.rindex('\\')
-    location = location[:last_slash]
-    location = location + '\\'
+    else:
+        if location[:-1] != '/':
+            location = location + '/'
 
-    # Obtain JUST the file name of the the spike2 files to know what to name our new file.
-    if '\\' in file_name1:
-        last_slash = file_name1.rindex('\\')
-        file_name1 = file_name1[last_slash + 1:]
-
-    if '\\' in file_name2:
-        last_slash = file_name2.rindex('\\')
-        file_name2 = file_name2[last_slash + 1:]
-
-    # Remove the extension if the user included it in the config file
-    if file_name1[-4:] == '.smr':
-        file_name1 = file_name1[:-4]
-
-    if file_name2[-4:] == '.smr':
-        file_name2 = file_name2[:-4]
+    read_from = "combined - " + file_list[0]
+    for i in range(1, len(file_list)):
+        read_from = read_from + " and " + file_list[i]
 
     # Recreate the combined file name, so we can load it and prepare the save_to location as well
-    read_from = "combined - " + file_name1 + " and " + file_name2
     read_from2 = location + read_from + ".hdf5"
 
     # Read the combined file so we can extract the channels
@@ -62,10 +63,16 @@ if __name__ == "__main__":
 
     # Go through the files, save the data we want and save it to a numpy array
     with h5py.File(read_from2, 'r+') as f:
+        for i in f:
+            print(i + " length = " + str(len(f.get(i)[:])))
+
         for i in channel_list:
+
             if i in f:
+
                 removed.append(i)
                 temp = f.get(i)[:]
+
                 if check == 0:
                     combined_data = [temp]
                     check += 1
@@ -76,15 +83,15 @@ if __name__ == "__main__":
     for j in removed:
         channel_list.remove(j)
 
-    if len(channel_list) >= 0:
+    if len(channel_list) > 0:
         print("The following channels were not found - " + str(channel_list))
 
     # Use the channels that were found to determine the name of our new file
-    present = str(removed[0])
+    channels_present = str(removed[0])
     for i in removed[1:]:
-        present = present + ", " + str(i)
+        channels_present = channels_present + ", " + str(i)
 
-    location = location + present + " " + read_from + ".hdf5"
+    location = location + channels_present + " " + read_from + ".hdf5"
 
     # Save the file with the extracted channels
     with h5py.File(location, 'w') as f:
