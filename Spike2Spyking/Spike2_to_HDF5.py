@@ -1,5 +1,5 @@
 import numpy as np
-import quantities
+import config_setup
 from neo import Spike2IO  # neo v.0.6.1
 import h5py
 import ntpath
