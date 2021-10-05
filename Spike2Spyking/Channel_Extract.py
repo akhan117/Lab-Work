@@ -36,11 +36,11 @@ if __name__ == "__main__":
         if '.smr' in file_list[i]:
             file_list[i] = file_list[i][:-4]
 
-    print(file_list)
-
     # Remove newline
     location = location[:-1]
 
+    # For Windows -> If the folder to save_to ends with \, then simply add .hdf5 to the end of the name and save it,
+    # otherwise the backslash has to be added to have a legitimate directory
     if platform.system() == "Windows":
         if location[:-1] != '\\':
             location = location + '\\'
@@ -49,6 +49,7 @@ if __name__ == "__main__":
         if location[:-1] != '/':
             location = location + '/'
 
+    # Recreate the name of the final file in order to access it
     read_from = "combined - " + file_list[0]
     for i in range(1, len(file_list)):
         read_from = read_from + " and " + file_list[i]
@@ -63,9 +64,6 @@ if __name__ == "__main__":
 
     # Go through the files, save the data we want and save it to a numpy array
     with h5py.File(read_from2, 'r+') as f:
-        for i in f:
-            print(i + " length = " + str(len(f.get(i)[:])))
-
         for i in channel_list:
 
             if i in f:

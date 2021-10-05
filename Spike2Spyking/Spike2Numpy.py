@@ -32,7 +32,6 @@ def spyke_to_numpy(file_name):
 
         # Saving the channel names and sampling rate
         name_rate = np.append(name_rate, (sig.annotations['channel_names'][0], str(sig.sampling_rate)))
-
     return channels_data, segment.events[0], name_rate
 
 
@@ -55,6 +54,7 @@ if __name__ == "__main__":
     u_data = {}
     events = []
 
+    # Create Dictionary of combined data from all our files
     for file in file_list:
         u_data1, events1, name_and_rate = spyke_to_numpy(file)
         events.append(events1)
@@ -80,11 +80,13 @@ if __name__ == "__main__":
         for ele in name_and_rate:
             f.write(str(ele) + '\n')
 
+    # Obtain just the file names and remove the .smr extension from them
     file_list = [ntpath.basename(file) for file in file_list]
     for i in range(0, len(file_list)):
         if '.smr' in file_list[i]:
             file_list[i] = file_list[i][:-4]
 
+    # Create the name of the final file
     full_name = file_list[0]
     for i in range(1, len(file_list)):
         full_name = full_name + " and " + file_list[i]
@@ -102,9 +104,9 @@ if __name__ == "__main__":
         if save_to[:-1] == '/':
             save_to = save_to + "combined - " + full_name + ".hdf5"
         else:
-            save_to = save_to + '/' + ''"combined - " + full_name + ".hdf5"
+            save_to = save_to + '/' + "combined - " + full_name + ".hdf5"
 
-    # Saved as an hdf5 file, for compressions sake
+    # Save to our file
     with h5py.File(save_to, 'w') as f:
         for i in list(u_data):
             f.create_dataset(i, len(u_data[i]), data=u_data[i], compression="gzip")
