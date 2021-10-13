@@ -1,4 +1,3 @@
-Replace this line with the paths for the spike2 sets, separated by a comma.
-Replace this line with the path you want to save to.
-Enter the channels you want to record - for example, if you want to use the channels called U1
-and U2, simply replace these lines with "U1, U2" (without the quotations). You do not need to edit these lines until you want to run Channel_extract.
+C:\Ayaan Data\CCH_R9_pre_part1_071221,C:\Ayaan Data\CCH_R9_pre_part2_071221,C:\Ayaan Data\CCH_R9_post_071221
+C:\Ayaan Data\Numpy Arrays
+U1_PC, U2_PC, U3_PC
