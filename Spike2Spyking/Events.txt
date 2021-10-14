@@ -1,126 +1,84 @@
-FILE:C:\Ayaan Data\CCH_R9_pre_part1_071221.smr
+FILE:C:\Ayaan Data\ParameterTest_OE8_091119_Preinfusion.smr
 
-at 30.962085000000002 s, BLANK
-at 63.986001 s, mineral oil
-at 97.020069 s, mineral oil
-at 130.02800100000002 s, mineral oil
-at 163.01800500000002 s, mineral oil
-at 195.180081 s, mineral oil
-at 227.312025 s, mineral oil
-at 259.386081 s, mineral oil
-at 291.416073 s, mineral oil
-at 323.540025 s, mineral oil
-at 355.646049 s, mineral oil
-at 387.908025 s, nonanol 1Pa
-at 419.968041 s, heptanoic acid 1Pa
-at 453.052005 s, pentyl butyrate 1Pa
-at 485.160081 s, furfuryl propionate 1Pa
-at 517.238025 s, cis-2-hexynyl acetate 1Pa
-at 550.284081 s, heptanoic acid 1Pa
-at 582.400041 s, furfuryl propionate 1Pa
-at 614.978025 s, pentyl butyrate 1Pa
-at 647.030049 s, nonanol 1Pa
-at 679.210053 s, cis-2-hexynyl acetate 1Pa
-at 711.3740730000001 s, pentyl butyrate 1Pa
-at 744.416025 s, heptanoic acid 1Pa
-at 777.442101 s, furfuryl propionate 1Pa
-at 809.550069 s, cis-2-hexynyl acetate 1Pa
-at 841.6940010000001 s, nonanol 1Pa
-at 873.724101 s, pentyl butyrate 1Pa
-at 905.882073 s, furfuryl propionate 1Pa
-at 937.960017 s, heptanoic acid 1Pa
-at 970.1120490000001 s, nonanol 1Pa
-at 1002.3320130000001 s, cis-2-hexynyl acetate 1Pa
-at 1034.492037 s, heptanoic acid 1Pa
-at 1066.604001 s, pentyl butyrate 1Pa
-at 1098.776013 s, furfuryl propionate 1Pa
-at 1130.988093 s, nonanol 1Pa
-at 1163.128029 s, cis-2-hexynyl acetate 1Pa
-at 1195.258029 s, mineral oil
+at 30.355017 s, BLANK
+at 63.301065 s, mineral oil
+at 96.239013 s, mineral oil
+at 129.155037 s, mineral oil
+at 162.181005 s, mineral oil
+at 195.236997 s, mineral oil
+at 228.26307300000002 s, mineral oil
+at 261.278997 s, mineral oil
+at 294.269001 s, mineral oil
+at 327.177033 s, mineral oil
+at 359.197089 s, mineral oil
+at 392.163009 s, nonanol 1Pa
+at 425.064993 s, cis-2-hexynyl acetate 1Pa
+at 457.87701300000003 s, furfuryl propionate 1Pa
+at 490.853085 s, heptanoic acid 1Pa
+at 523.695021 s, nonanol 1Pa
+at 556.715049 s, heptanoic acid 1Pa
+at 589.751061 s, cis-2-hexynyl acetate 1Pa
+at 621.901041 s, nonanol 1Pa
+at 654.780993 s, pental butanate 1Pa
+at 687.799077 s, heptanoic acid 1Pa
+at 720.833037 s, pental butanate 1Pa
+at 753.859005 s, nonanol 1Pa
+at 786.831081 s, furfuryl propionate 1Pa
+at 819.837069 s, furfuryl propionate 1Pa
+at 851.873001 s, heptanoic acid 1Pa
+at 884.907069 s, cis-2-hexynyl acetate 1Pa
+at 917.929041 s, pental butanate 1Pa
+at 950.8570530000001 s, pental butanate 1Pa
+at 982.879053 s, furfuryl propionate 1Pa
+at 1014.919089 s, pental butanate 1Pa
+at 1047.731001 s, nonanol 1Pa
+at 1080.613005 s, cis-2-hexynyl acetate 1Pa
+at 1113.506997 s, furfuryl propionate 1Pa
+at 1146.4710810000001 s, cis-2-hexynyl acetate 1Pa
+at 1179.285045 s, heptanoic acid 1Pa
+at 1212.0830250000001 s, mineral oil
  
 
 
-FILE:C:\Ayaan Data\CCH_R9_pre_part2_071221.smr
+FILE:C:\Ayaan Data\ParameterTest_OE8_091119_Postinfusion.smr
 
-at 30.962085000000002 s, BLANK
-at 63.986001 s, mineral oil
-at 97.020069 s, mineral oil
-at 130.02800100000002 s, mineral oil
-at 163.01800500000002 s, mineral oil
-at 195.180081 s, mineral oil
-at 227.312025 s, mineral oil
-at 259.386081 s, mineral oil
-at 291.416073 s, mineral oil
-at 323.540025 s, mineral oil
-at 355.646049 s, mineral oil
-at 387.908025 s, nonanol 1Pa
-at 419.968041 s, heptanoic acid 1Pa
-at 453.052005 s, pentyl butyrate 1Pa
-at 485.160081 s, furfuryl propionate 1Pa
-at 517.238025 s, cis-2-hexynyl acetate 1Pa
-at 550.284081 s, heptanoic acid 1Pa
-at 582.400041 s, furfuryl propionate 1Pa
-at 614.978025 s, pentyl butyrate 1Pa
-at 647.030049 s, nonanol 1Pa
-at 679.210053 s, cis-2-hexynyl acetate 1Pa
-at 711.3740730000001 s, pentyl butyrate 1Pa
-at 744.416025 s, heptanoic acid 1Pa
-at 777.442101 s, furfuryl propionate 1Pa
-at 809.550069 s, cis-2-hexynyl acetate 1Pa
-at 841.6940010000001 s, nonanol 1Pa
-at 873.724101 s, pentyl butyrate 1Pa
-at 905.882073 s, furfuryl propionate 1Pa
-at 937.960017 s, heptanoic acid 1Pa
-at 970.1120490000001 s, nonanol 1Pa
-at 1002.3320130000001 s, cis-2-hexynyl acetate 1Pa
-at 1034.492037 s, heptanoic acid 1Pa
-at 1066.604001 s, pentyl butyrate 1Pa
-at 1098.776013 s, furfuryl propionate 1Pa
-at 1130.988093 s, nonanol 1Pa
-at 1163.128029 s, cis-2-hexynyl acetate 1Pa
-at 1195.258029 s, mineral oil
- 
-
-
-FILE:C:\Ayaan Data\CCH_R9_post_071221.smr
-
-at 30.962085000000002 s, BLANK
-at 63.986001 s, mineral oil
-at 97.020069 s, mineral oil
-at 130.02800100000002 s, mineral oil
-at 163.01800500000002 s, mineral oil
-at 195.180081 s, mineral oil
-at 227.312025 s, mineral oil
-at 259.386081 s, mineral oil
-at 291.416073 s, mineral oil
-at 323.540025 s, mineral oil
-at 355.646049 s, mineral oil
-at 387.908025 s, nonanol 1Pa
-at 419.968041 s, heptanoic acid 1Pa
-at 453.052005 s, pentyl butyrate 1Pa
-at 485.160081 s, furfuryl propionate 1Pa
-at 517.238025 s, cis-2-hexynyl acetate 1Pa
-at 550.284081 s, heptanoic acid 1Pa
-at 582.400041 s, furfuryl propionate 1Pa
-at 614.978025 s, pentyl butyrate 1Pa
-at 647.030049 s, nonanol 1Pa
-at 679.210053 s, cis-2-hexynyl acetate 1Pa
-at 711.3740730000001 s, pentyl butyrate 1Pa
-at 744.416025 s, heptanoic acid 1Pa
-at 777.442101 s, furfuryl propionate 1Pa
-at 809.550069 s, cis-2-hexynyl acetate 1Pa
-at 841.6940010000001 s, nonanol 1Pa
-at 873.724101 s, pentyl butyrate 1Pa
-at 905.882073 s, furfuryl propionate 1Pa
-at 937.960017 s, heptanoic acid 1Pa
-at 970.1120490000001 s, nonanol 1Pa
-at 1002.3320130000001 s, cis-2-hexynyl acetate 1Pa
-at 1034.492037 s, heptanoic acid 1Pa
-at 1066.604001 s, pentyl butyrate 1Pa
-at 1098.776013 s, furfuryl propionate 1Pa
-at 1130.988093 s, nonanol 1Pa
-at 1163.128029 s, cis-2-hexynyl acetate 1Pa
-at 1195.258029 s, mineral oil
+at 30.355017 s, BLANK
+at 63.301065 s, mineral oil
+at 96.239013 s, mineral oil
+at 129.155037 s, mineral oil
+at 162.181005 s, mineral oil
+at 195.236997 s, mineral oil
+at 228.26307300000002 s, mineral oil
+at 261.278997 s, mineral oil
+at 294.269001 s, mineral oil
+at 327.177033 s, mineral oil
+at 359.197089 s, mineral oil
+at 392.163009 s, nonanol 1Pa
+at 425.064993 s, cis-2-hexynyl acetate 1Pa
+at 457.87701300000003 s, furfuryl propionate 1Pa
+at 490.853085 s, heptanoic acid 1Pa
+at 523.695021 s, nonanol 1Pa
+at 556.715049 s, heptanoic acid 1Pa
+at 589.751061 s, cis-2-hexynyl acetate 1Pa
+at 621.901041 s, nonanol 1Pa
+at 654.780993 s, pental butanate 1Pa
+at 687.799077 s, heptanoic acid 1Pa
+at 720.833037 s, pental butanate 1Pa
+at 753.859005 s, nonanol 1Pa
+at 786.831081 s, furfuryl propionate 1Pa
+at 819.837069 s, furfuryl propionate 1Pa
+at 851.873001 s, heptanoic acid 1Pa
+at 884.907069 s, cis-2-hexynyl acetate 1Pa
+at 917.929041 s, pental butanate 1Pa
+at 950.8570530000001 s, pental butanate 1Pa
+at 982.879053 s, furfuryl propionate 1Pa
+at 1014.919089 s, pental butanate 1Pa
+at 1047.731001 s, nonanol 1Pa
+at 1080.613005 s, cis-2-hexynyl acetate 1Pa
+at 1113.506997 s, furfuryl propionate 1Pa
+at 1146.4710810000001 s, cis-2-hexynyl acetate 1Pa
+at 1179.285045 s, heptanoic acid 1Pa
+at 1212.0830250000001 s, mineral oil
  
 
 
