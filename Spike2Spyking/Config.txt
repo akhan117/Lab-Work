@@ -1,3 +1,3 @@
-C:\Ayaan Data\ParameterTest_OE8_091119_Preinfusion, C:\Ayaan Data\ParameterTest_OE8_091119_Postinfusion
-C:\Ayaan Data\Numpy Arrays
+S:\Ayaan\Data\ParameterTest_OE8_091119_Preinfusion, S:\Ayaan\Data\ParameterTest_OE8_091119_Postinfusion
+S:\Ayaan\Data\Numpy Arrays
 U1, U2, U3

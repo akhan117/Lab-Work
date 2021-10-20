@@ -1,4 +1,4 @@
-FILE:C:\Ayaan Data\ParameterTest_OE8_091119_Preinfusion.smr
+FILE:S:\Ayaan\Data\ParameterTest_OE8_091119_Preinfusion.smr
 
 at 30.355017 s, BLANK
 at 63.301065 s, mineral oil
@@ -40,7 +40,7 @@ at 1212.0830250000001 s, mineral oil
  
 
 
-FILE:C:\Ayaan Data\ParameterTest_OE8_091119_Postinfusion.smr
+FILE:S:\Ayaan\Data\ParameterTest_OE8_091119_Postinfusion.smr
 
 at 30.355017 s, BLANK
 at 63.301065 s, mineral oil
