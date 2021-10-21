@@ -71,6 +71,8 @@ if __name__ == "__main__":
                 removed.append(i)
                 temp = f.get(i)[:]
 
+                print(str(i) + " was extracted, length: " + str(len(temp)))
+
                 if check == 0:
                     combined_data = [temp]
                     check += 1
@@ -90,6 +92,7 @@ if __name__ == "__main__":
         channels_present = channels_present + ", " + str(i)
 
     location = location + channels_present + " " + read_from + ".hdf5"
+    print(np.shape(combined_data))
 
     # Save the file with the extracted channels
     with h5py.File(location, 'w') as f:

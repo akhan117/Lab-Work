@@ -23,7 +23,7 @@ def spyke_to_numpy(file_name):
 
     channels_data = {}
     name_rate = np.array([])
-
+    print("In " + ntpath.basename(file) + ", the sampling rate and number of readings are:")
     # Go through all the channels, and add the data from each to the dictionary
     for sig in segment.analogsignals:
         channel_data = np.squeeze(sig)
@@ -32,6 +32,12 @@ def spyke_to_numpy(file_name):
 
         # Saving the channel names and sampling rate
         name_rate = np.append(name_rate, (sig.annotations['channel_names'][0], str(sig.sampling_rate)))
+
+        print(str(channel_name) + ": " + str(sig.sampling_rate) +
+              ", " + str(len(channels_data.get(channel_name))))
+
+    print()
+    print()
     return channels_data, segment.events[0], name_rate
 
 
@@ -54,6 +60,7 @@ if __name__ == "__main__":
     u_data = {}
     events = []
 
+
     # Create Dictionary of combined data from all our files
     for file in file_list:
         u_data1, events1, name_and_rate = spyke_to_numpy(file)
@@ -63,6 +70,10 @@ if __name__ == "__main__":
             if i not in u_data:
                 u_data[i] = np.array([])
             u_data[i] = np.concatenate((u_data[i], u_data1[i]))
+
+    print("In the combined file, the number of readings are:")
+    for key in u_data.keys():
+        print(str(key) + ": " + str(len(u_data.get(key))))
 
     # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
