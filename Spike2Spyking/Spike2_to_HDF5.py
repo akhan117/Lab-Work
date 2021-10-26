@@ -78,13 +78,19 @@ if __name__ == "__main__":
     # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
         z = 0
+        to_add = 0
         for event in events:
-            f.write("FILE:" + file_list[z] + '\n' + '\n')
             z += 1
-            for event1 in range(0, len(events1.times)):
-                f.write("at " + str(events1.times[event1]) + ", " + str(events1.labels[event1])[2:-1] + '\n')
 
-            f.write(" " + '\n' + '\n' + '\n')
+            for event1 in range(0, len(event.times)):
+
+                timing = float(event.times[event1]) + to_add
+                f.write('\n' + str(event.labels[event1])[2:-1] + ", " + str(timing) )
+                if event1 is len(events1.times) - 1:
+                    to_add += float(events1.times[event1])
+
+
+
 
     # Save the channel names and sampling rates
     with open("Channels.txt", 'w') as f:
