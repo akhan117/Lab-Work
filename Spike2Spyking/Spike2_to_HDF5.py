@@ -20,7 +20,6 @@ def spyke_to_numpy(file_name):
     block = blocks[0]
     segments = block.segments
     segment = segments[0]
-
     channels_data = {}
     name_rate = np.array([])
     print("In " + ntpath.basename(file) + ", the sampling rate and number of readings are:")
@@ -37,6 +36,16 @@ def spyke_to_numpy(file_name):
               ", " + str(len(channels_data.get(channel_name))))
 
     print()
+    print()
+    a = segment.events[0]
+    print(a.times)
+    print(a.labels)
+    b = segment.events[1]
+    print(b.times)
+    print(b.labels)
+    c = segment.events[2]
+    print(c.times)
+    print(c.labels)
     print()
     return channels_data, segment.events[0], name_rate
 
@@ -85,7 +94,7 @@ if __name__ == "__main__":
             for event1 in range(0, len(event.times)):
 
                 timing = float(event.times[event1]) + to_add
-                f.write('\n' + str(event.labels[event1])[2:-1] + ", " + str(timing) )
+                f.write(str(event.labels[event1])[2:-1] + ", " + str(timing) + '\n' )
                 if event1 is len(events1.times) - 1:
                     to_add += float(events1.times[event1])
 
@@ -124,6 +133,6 @@ if __name__ == "__main__":
             save_to = save_to + '/' + "combined - " + full_name + ".hdf5"
 
     # Save to our file
-    with h5py.File(save_to, 'w') as f:
-        for i in list(u_data):
-            f.create_dataset(i, len(u_data[i]), data=u_data[i], compression="gzip")
+    # with h5py.File(save_to, 'w') as f:
+    #     for i in list(u_data):
+    #         f.create_dataset(i, len(u_data[i]), data=u_data[i], compression="gzip")

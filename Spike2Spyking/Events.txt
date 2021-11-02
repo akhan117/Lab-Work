@@ -1,4 +1,3 @@
-
 BLANK, 30.238485
 mineral oil, 63.254517
 mineral oil, 96.190521

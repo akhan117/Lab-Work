@@ -86,6 +86,7 @@ if __name__ == "__main__":
     if len(channel_list) > 0:
         print("The following channels were not found - " + str(channel_list))
 
+
     # Use the channels that were found to determine the name of our new file
     channels_present = str(removed[0])
     for i in removed[1:]:
