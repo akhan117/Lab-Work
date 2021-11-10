@@ -3,44 +3,92 @@ import h5py
 from quantities import uV, Hz, ms, s
 import os
 import platform
+from os.path import exists
+import ntpath
+from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askdirectory
+
+Config_path = 'Config.txt'
+
+val = askopenfilename()
+sal = askdirectory()
+
+if platform.system() == "Windows":
+    save_to = sal + "\\" + ntpath.basename(val)
+    print(sal)
+else:
+    save_to = sal + "/" + ntpath.basename(val)
+
+if exists(Config_path):
+    mode = 'a'
+else:
+
+    print("Config created")
+    print("READ - You must configure the config file for the program to work!")
+
+    mode = 'w'
+    with open(Config_path, mode) as f:
+        f.write('Replace this line with the complete path to the result-merged file obtained from spyking-circus\n')
+        f.write('Replace this line with the path you want to save to.\n')
+
+    exit()
 
 if __name__ == "__main__":
-    val = r'S:\Ayaan\Data\Numpy Arrays\Spyking\U1, U2, U3 combined - ParameterTest_OE8_091119_Preinfusion and ParameterTest_OE8_091119_Postinfusion.result-merged.hdf5'
-    sal = r'S:\Ayaan\Data\Numpy Arrays\Spyking\U1, U2, U3 combined - ParameterTest_OE8_091119_Preinfusion and ParameterTest_OE8_091119_Postinfusion.clusters-merged.hdf5'
-    cal = r''
-    clusters_file = h5py.File(sal, 'r')
-    electrodes = np.array(clusters_file.get('electrodes'))
-    print(electrodes)
-    Sampling_rate = 18518.51851851852*Hz
+
+    Sampling_rate = 18518.51851851852 * Hz
     period = (1. / Sampling_rate).rescale(s)
     Electrode_List = []
     Spike_times = {}
+
     with h5py.File(val, 'r+') as f:
         me = len(f.get('spiketimes'))
         for i in range(0, me):
             string = "temp_" + str(i)
             string = 'spiketimes/' + string
-            electrode = 'electrode_' + str(i)
-            workable = f.get(string)[:] * period
+            neuron = 'neuron_' + str(i)
+            spiketimes = f.get(string)[:] * period
             reading_list = []
-            for i in workable:
+            for j in spiketimes:
+                reading_list.append(float(j))
 
-                reading_list.append(float(i))
+            Spike_times[neuron] = reading_list
 
-            print(reading_list)
-            print()
-
-            import os
-
-    print(os.path.abspath(os.curdir))
+    os.chdir("..")
     events = os.path.abspath(os.curdir)
 
     if platform.system() == "Windows":
         events = events + "\\Spike2Spyking\\Events.txt"
-        print(events)
 
     else:
         events = events + "/Spike2Spyking/Events.txt"
-        print(events)
 
+    with open(events, 'r') as f:
+        events_and_time = f.readlines()
 
+    events_and_time = [x[:-1] for x in events_and_time]
+    events_and_time = [x.split(',') for x in events_and_time]
+
+    event_list = []
+    time_list = []
+
+    for i in events_and_time:
+        [x, y] = i
+        event_list.append(x)
+        time_list.append(float(y))
+
+    print(event_list)
+    print(time_list)
+    print("Enter the the amount of time the rat is exposed to the odor for, in seconds:")
+    offset = input()
+    offset = float(offset)
+    time_list_temp = [x + offset for x in time_list]
+    print(time_list_temp)
+    with h5py.File(save_to, 'w') as f:
+        f.create_dataset("Odor_Names", len(event_list), data=event_list, compression="gzip")
+        f.create_dataset("Odor_Onsets", len(time_list), data=time_list, compression="gzip")
+        f.create_dataset("Odor_Offsets", len(time_list_temp), data=time_list_temp, compression="gzip")
+        for i in Spike_times:
+            f.create_dataset(i, len(Spike_times[i]), data=Spike_times[i], compression="gzip")
+
+    with h5py.File(save_to, 'r') as f:
+        print(f.get("Odor_Names")[:])
