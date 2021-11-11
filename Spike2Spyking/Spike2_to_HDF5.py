@@ -1,10 +1,12 @@
 import numpy as np
-import config_setup
 from neo import Spike2IO  # neo v.0.6.1
-
 import h5py
 import ntpath
 import platform
+import pickle
+from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askdirectory
+from os.path import exists
 
 
 # Written by Ayaan Khan
@@ -15,6 +17,7 @@ import platform
 # and run the program again
 
 def spyke_to_numpy(file_name):
+    print("Working on " + file_name + "......")
     # Typical Set up for Neo to access the file, and we only have one block and one segment
     spike2_reader = Spike2IO(file_name)
     blocks = spike2_reader.read()
@@ -23,7 +26,7 @@ def spyke_to_numpy(file_name):
     segment = segments[0]
     channels_data = {}
     name_rate = np.array([])
-    print("In " + ntpath.basename(file) + ", the sampling rate and number of readings are:")
+
     # Go through all the channels, and add the data from each to the dictionary
     for sig in segment.analogsignals:
         channel_data = np.squeeze(sig)
@@ -33,27 +36,78 @@ def spyke_to_numpy(file_name):
         # Saving the channel names and sampling rate
         name_rate = np.append(name_rate, (sig.annotations['channel_names'][0], str(sig.sampling_rate)))
 
-        print(str(channel_name) + ": " + str(sig.sampling_rate) +
-              ", " + str(len(channels_data.get(channel_name))))
-
     return channels_data, segment.events[0], name_rate
 
 
 if __name__ == "__main__":
 
-    # Read the data we want from the config file
-    with open("Config.txt", 'r') as f:
-        # We want the Post and Pre infusion readings, so we take in two spike files
-        # Shave off the newline at the end
-        file_name = f.readline()[:-1]
-        file_list = file_name.split(",")
-        for i in range(0, len(file_list)):
-            file_list[i] = file_list[i].strip()
+    if exists("Default Values/Default Number of Files.pk"):
+        print()
+        print("Using the default number of files from the file Default Number of Files.pk! Delete this file if you do"
+              + " not want to use the default number of files anymore!")
 
-        # To make sure the file names includes the extension, add .smr to the end if it's not already there
-        file_list = [file + '.smr' for file in file_list if file[-4:] != '.smr']
+        with open("Default Values/Default Number of Files.pk", 'rb') as fi:
+            x = pickle.load(fi)
 
-        save_to = f.readline()[:-1]
+        print("Default number of files is " + x)
+
+    else:
+        print("#######################################################################################################")
+        print("How many files do you want to work with?")
+        print("#######################################################################################################")
+        x = input()
+        print()
+
+        print("Do you want save this as the default number of files (y/n)")
+        default = input()
+
+        if default == 'y':
+            with open("Default Values/Default Number of Files.pk", 'wb') as fi:
+                pickle.dump(x, fi)
+
+        elif default == 'n':
+            print()
+
+        else:
+            print("Defaulting to n.")
+    print()
+    file_list = []
+
+    for i in range(0, int(x)):
+        print("There are still " + str(int(x) - i) + " file(s) to choose")
+        val = askopenfilename()
+        file_list.append(val)
+
+    if exists("Default Values/Default Save to Location.pk"):
+        print()
+        print("Using the Default save to location from the file Default Save to Location.pk! Delete this file if you do"
+              + " not want to use the default save to location anymore!")
+
+        with open("Default Values/Default Save to Location.pk", 'rb') as fi:
+            save_to = pickle.load(fi)
+
+        print("Saving to " + save_to)
+
+    else:
+        print("#######################################################################################################")
+        print("Where do you want to save the files to")
+        print("#######################################################################################################")
+        save_to = askdirectory()
+
+        print("Do you want save this as the default location to save to (y/n)")
+        default = input()
+
+        if default == 'y':
+            with open("Default Values/Default Save to Location.pk", 'wb') as fi:
+                pickle.dump(save_to, fi)
+
+        elif default == 'n':
+            print()
+
+        else:
+            print("Defaulting to n.")
+
+    print()
 
     u_data = {}
     events = []
@@ -67,10 +121,6 @@ if __name__ == "__main__":
             if i not in u_data:
                 u_data[i] = np.array([])
             u_data[i] = np.concatenate((u_data[i], u_data1[i]))
-
-    print("In the combined file, the number of readings are:")
-    for key in u_data.keys():
-        print(str(key) + ": " + str(len(u_data.get(key))))
 
     # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
@@ -106,17 +156,21 @@ if __name__ == "__main__":
     # otherwise the backslash has to be added to have a legitimate directory
     if platform.system() == "Windows":
         if save_to[:-1] == '\\':
-            save_to = save_to + "combined - " + full_name + ".hdf5"
+            save_to = save_to + full_name + ".hdf5"
         else:
-            save_to = save_to + '\\' + ''"combined - " + full_name + ".hdf5"
+            save_to = save_to + '\\' + full_name + ".hdf5"
 
     # For OSX and Linux -> The directory would likely include a forward slash instead
     else:
         if save_to[:-1] == '/':
-            save_to = save_to + "combined - " + full_name + ".hdf5"
+            save_to = save_to + full_name + ".hdf5"
         else:
-            save_to = save_to + '/' + "combined - " + full_name + ".hdf5"
+            save_to = save_to + '/' + full_name + ".hdf5"
 
+    with open("Save to.pk", 'wb') as fi:
+        pickle.dump(save_to, fi)
+
+    print("Working on saving and compressing the data.....")
     # Save to our file
     with h5py.File(save_to, 'w') as f:
         for i in list(u_data):

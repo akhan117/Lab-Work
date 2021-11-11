@@ -1,74 +1,80 @@
-BLANK, 30.238485
-mineral oil, 63.254517
-mineral oil, 96.190521
-mineral oil, 129.226533
-mineral oil, 162.08650500000002
-mineral oil, 194.120493
-mineral oil, 226.184505
-mineral oil, 259.208529
-mineral oil, 292.172505
-mineral oil, 325.172553
-mineral oil, 357.234513
-pental butanate 1Pa, 390.196545
-nonanol 1Pa, 423.076497
-heptanoic acid 1Pa, 456.136485
-nonanol 1Pa, 489.178545
-heptanoic acid 1Pa, 522.166497
-nonanol 1Pa, 554.202537
-furfuryl propionate 1Pa, 587.166513
-heptanoic acid 1Pa, 620.082537
-nonanol 1Pa, 653.084529
-furfuryl propionate 1Pa, 686.052501
-cis-2-hexynyl acetate 1Pa, 718.9765170000001
-cis-2-hexynyl acetate 1Pa, 751.876557
-furfuryl propionate 1Pa, 784.866561
-cis-2-hexynyl acetate 1Pa, 817.808505
-pental butanate 1Pa, 849.8225130000001
-pental butanate 1Pa, 881.9465730000001
-pental butanate 1Pa, 914.928477
-heptanoic acid 1Pa, 948.0005610000001
-furfuryl propionate 1Pa, 981.034521
-cis-2-hexynyl acetate 1Pa, 1013.982513
-heptanoic acid 1Pa, 1046.912577
-pental butanate 1Pa, 1079.836485
-nonanol 1Pa, 1111.932573
-furfuryl propionate 1Pa, 1144.990509
-cis-2-hexynyl acetate 1Pa, 1177.990557
-mineral oil, 1210.732485
-BLANK, 1242.4380420000002
-mineral oil, 1275.3840900000002
-mineral oil, 1308.3220380000002
-mineral oil, 1341.2380620000001
-mineral oil, 1374.26403
-mineral oil, 1407.320022
-mineral oil, 1440.3460980000002
-mineral oil, 1473.3620220000003
-mineral oil, 1506.352026
-mineral oil, 1539.260058
-mineral oil, 1571.2801140000001
-nonanol 1Pa, 1604.2460340000002
-cis-2-hexynyl acetate 1Pa, 1637.148018
-furfuryl propionate 1Pa, 1669.9600380000002
-heptanoic acid 1Pa, 1702.93611
-nonanol 1Pa, 1735.7780460000001
-heptanoic acid 1Pa, 1768.7980740000003
-cis-2-hexynyl acetate 1Pa, 1801.8340860000003
-nonanol 1Pa, 1833.984066
-pental butanate 1Pa, 1866.8640180000002
-heptanoic acid 1Pa, 1899.882102
-pental butanate 1Pa, 1932.9160620000002
-nonanol 1Pa, 1965.9420300000002
-furfuryl propionate 1Pa, 1998.9141060000002
-furfuryl propionate 1Pa, 2031.920094
-heptanoic acid 1Pa, 2063.9560260000003
-cis-2-hexynyl acetate 1Pa, 2096.990094
-pental butanate 1Pa, 2130.0120660000002
-pental butanate 1Pa, 2162.940078
-furfuryl propionate 1Pa, 2194.962078
-pental butanate 1Pa, 2227.002114
-nonanol 1Pa, 2259.814026
-cis-2-hexynyl acetate 1Pa, 2292.69603
-furfuryl propionate 1Pa, 2325.5900220000003
-cis-2-hexynyl acetate 1Pa, 2358.5541060000005
-heptanoic acid 1Pa, 2391.3680700000004
-mineral oil, 2424.1660500000003
+BLANK, 30.026049
+mineral oil, 64.298013
+mineral oil, 97.81397700000001
+mineral oil, 131.312013
+mineral oil, 164.785965
+mineral oil, 198.253977
+mineral oil, 231.748017
+mineral oil, 266.159949
+mineral oil, 299.648049
+mineral oil, 334.078017
+mineral oil, 368.481957
+cis-2-hexynyl acetate 1Pa, 401.982045
+BLANK, 30.983253
+mineral oil, 63.193281
+mineral oil, 95.401257
+mineral oil, 128.411241
+mineral oil, 161.303289
+cis-2-hexynyl acetate 1Pa, 193.381233
+heptanoic acid 1Pa, 225.499245
+pentyl butyrate 1Pa, 257.543277
+furfuryl propionate 1Pa, 289.605237
+nonanol 1Pa, 321.683289
+cis-2-hexynyl acetate 1Pa, 353.797305
+furfuryl propionate 1Pa, 386.867229
+pentyl butyrate 1Pa, 418.919253
+nonanol 1Pa, 451.033269
+heptanoic acid 1Pa, 484.017225
+pentyl butyrate 1Pa, 516.131241
+heptanoic acid 1Pa, 548.173221
+furfuryl propionate 1Pa, 581.215281
+cis-2-hexynyl acetate 1Pa, 613.335237
+nonanol 1Pa, 645.413289
+heptanoic acid 1Pa, 677.503221
+nonanol 1Pa, 709.565289
+furfuryl propionate 1Pa, 741.611265
+pentyl butyrate 1Pa, 773.6893170000001
+cis-2-hexynyl acetate 1Pa, 805.813269
+furfuryl propionate 1Pa, 838.865265
+pentyl butyrate 1Pa, 870.941265
+nonanol 1Pa, 903.005277
+heptanoic acid 1Pa, 935.055249
+cis-2-hexynyl acetate 1Pa, 967.103277
+mineral oil, 999.2792850000001
+BLANK, 30.962085000000002
+mineral oil, 63.986001
+mineral oil, 97.020069
+mineral oil, 130.02800100000002
+mineral oil, 163.01800500000002
+mineral oil, 195.180081
+mineral oil, 227.312025
+mineral oil, 259.386081
+mineral oil, 291.416073
+mineral oil, 323.540025
+mineral oil, 355.646049
+nonanol 1Pa, 387.908025
+heptanoic acid 1Pa, 419.968041
+pentyl butyrate 1Pa, 453.052005
+furfuryl propionate 1Pa, 485.160081
+cis-2-hexynyl acetate 1Pa, 517.238025
+heptanoic acid 1Pa, 550.284081
+furfuryl propionate 1Pa, 582.400041
+pentyl butyrate 1Pa, 614.978025
+nonanol 1Pa, 647.030049
+cis-2-hexynyl acetate 1Pa, 679.210053
+pentyl butyrate 1Pa, 711.3740730000001
+heptanoic acid 1Pa, 744.416025
+furfuryl propionate 1Pa, 777.442101
+cis-2-hexynyl acetate 1Pa, 809.550069
+nonanol 1Pa, 841.6940010000001
+pentyl butyrate 1Pa, 873.724101
+furfuryl propionate 1Pa, 905.882073
+heptanoic acid 1Pa, 937.960017
+nonanol 1Pa, 970.1120490000001
+cis-2-hexynyl acetate 1Pa, 1002.3320130000001
+heptanoic acid 1Pa, 1034.492037
+pentyl butyrate 1Pa, 1066.604001
+furfuryl propionate 1Pa, 1098.776013
+nonanol 1Pa, 1130.988093
+cis-2-hexynyl acetate 1Pa, 1163.128029
+mineral oil, 1195.258029

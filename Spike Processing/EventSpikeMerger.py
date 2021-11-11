@@ -8,9 +8,16 @@ import ntpath
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import askdirectory
 
-Config_path = 'Config.txt'
-
+print("###############################################################################################################")
+print("Select the result-merged.hdf5 file from Spyking-Circus")
+print("###############################################################################################################")
+print()
 val = askopenfilename()
+
+print("###############################################################################################################")
+print("Select the folder you want to print from")
+print("###############################################################################################################")
+print()
 sal = askdirectory()
 
 if platform.system() == "Windows":
@@ -18,20 +25,6 @@ if platform.system() == "Windows":
     print(sal)
 else:
     save_to = sal + "/" + ntpath.basename(val)
-
-if exists(Config_path):
-    mode = 'a'
-else:
-
-    print("Config created")
-    print("READ - You must configure the config file for the program to work!")
-
-    mode = 'w'
-    with open(Config_path, mode) as f:
-        f.write('Replace this line with the complete path to the result-merged file obtained from spyking-circus\n')
-        f.write('Replace this line with the path you want to save to.\n')
-
-    exit()
 
 if __name__ == "__main__":
 

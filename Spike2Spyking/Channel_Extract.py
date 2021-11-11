@@ -2,6 +2,8 @@ import numpy as np
 import h5py
 import ntpath
 import platform
+import pickle
+from os.path import exists
 
 # Written by Ayaan Khan
 # This program extracts the channels you specify from the data Spike2Numpy. This program will not run correctly
@@ -9,53 +11,43 @@ import platform
 
 if __name__ == "__main__":
 
-    # Find out where the Spike2Numpy array is stored at and load it. Also save the extracted file to that location.
-    with open("Config.txt", 'r') as f:
-        file_name = f.readline()[:-1]
-        file_list = file_name.split(",")
-        for i in range(0, len(file_list)):
-            file_list[i] = file_list[i].strip()
+    with open("Save to.pk", 'rb') as fi:
+        read_from = pickle.load(fi)
+    print(read_from)
 
-        location = f.readline()
-        channel_name = f.readline()
+    if exists("Default Values/Default Channels.pk"):
+        print()
+        print("Using the Default Values from the file Default Channels.pk! Delete this file if you do not want to use "
+              + "these default values anymore!")
 
-        if channel_name[-1:] == '\n':
-            channel_name = channel_name[:-1]
+        with open("Default Values/Default Channels.pk", 'rb') as fi:
+            channel_list = pickle.load(fi)
 
-        # Save the Channels we need as a list for iteration
+        print("The default channels are " + str(channel_list))
+    else:
+
+        print("#######################################################################################################")
+        print("Enter the channels you want to input, separated by a comma. (e.g. - U1, U2, U3)")
+        print("#######################################################################################################")
+        channel_name = input()
         channel_list = channel_name.split(",")
         for i in range(0, len(channel_list)):
             channel_list[i] = channel_list[i].strip()
 
-    # Silly string manipulation to make sure that we can obtain the folder containing the file name and also
-    # the name of the file itself.
+        print("Do you want save these channels as the default channels to extract? (y/n)")
+        default = input()
 
-    # Obtain JUST the file name of the the spike2 files to know where our file is
-    file_list = [ntpath.basename(file) for file in file_list]
-    for i in range(0, len(file_list)):
-        if '.smr' in file_list[i]:
-            file_list[i] = file_list[i][:-4]
+        if default == 'y':
+            with open("Default Values/Default Channels.pk", 'wb') as fi:
+                pickle.dump(channel_list, fi)
 
-    # Remove newline
-    location = location[:-1]
+        elif default == 'n':
+            print()
 
-    # For Windows -> If the folder to save_to ends with \, then simply add .hdf5 to the end of the name and save it,
-    # otherwise the backslash has to be added to have a legitimate directory
-    if platform.system() == "Windows":
-        if location[:-1] != '\\':
-            location = location + '\\'
+        else:
+            print("Defaulting to n.")
 
-    else:
-        if location[:-1] != '/':
-            location = location + '/'
-
-    # Recreate the name of the final file in order to access it
-    read_from = "combined - " + file_list[0]
-    for i in range(1, len(file_list)):
-        read_from = read_from + " and " + file_list[i]
-
-    # Recreate the combined file name, so we can load it and prepare the save_to location as well
-    read_from2 = location + read_from + ".hdf5"
+    print()
 
     # Read the combined file so we can extract the channels
     combined_data = np.array([])
@@ -63,7 +55,7 @@ if __name__ == "__main__":
     check = 0
 
     # Go through the files, save the data we want and save it to a numpy array
-    with h5py.File(read_from2, 'r+') as f:
+    with h5py.File(read_from, 'r+') as f:
         for i in channel_list:
 
             if i in f:
@@ -71,7 +63,7 @@ if __name__ == "__main__":
                 removed.append(i)
                 temp = f.get(i)[:]
 
-                print(str(i) + " was extracted, length: " + str(len(temp)))
+                print(str(i) + " was extracted.")
 
                 if check == 0:
                     combined_data = [temp]
@@ -86,15 +78,16 @@ if __name__ == "__main__":
     if len(channel_list) > 0:
         print("The following channels were not found - " + str(channel_list))
 
-
     # Use the channels that were found to determine the name of our new file
     channels_present = str(removed[0])
     for i in removed[1:]:
         channels_present = channels_present + ", " + str(i)
 
-    location = location + channels_present + " " + read_from + ".hdf5"
-    print(np.shape(combined_data))
+    read_from1, read_from2 = ntpath.split(read_from)
 
+    location = read_from1 + '/' + channels_present + ' ' + read_from2
+
+    print("Combining the channels....")
     # Save the file with the extracted channels
     with h5py.File(location, 'w') as f:
         # We save all the data in one data set because spyking-circus seems to use only 1 data-set from a hdf5 file
