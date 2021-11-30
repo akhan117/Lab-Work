@@ -7,6 +7,7 @@ from os.path import exists
 import ntpath
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import askdirectory
+import pickle
 
 print("###############################################################################################################")
 print("Select the result-merged.hdf5 file from Spyking-Circus")
@@ -14,11 +15,97 @@ print("#########################################################################
 print()
 val = askopenfilename()
 
-print("###############################################################################################################")
-print("Select the folder you want to print from")
-print("###############################################################################################################")
+if exists("Default Values/Default Save to Location.pk"):
+    print()
+    print("Using the Default save to location from the file Default Save to Location.pk! Delete this file if you do"
+          + " not want to use the default save to location anymore!")
+
+    with open("Default Values/Default Save to Location.pk", 'rb') as fi:
+        sal = pickle.load(fi)
+
+    print("Saving to " + sal)
+
+else:
+    print("#######################################################################################################")
+    print("Where do you want to save the files to")
+    print("#######################################################################################################")
+    sal = askdirectory()
+
+    print("Do you want save this as the default location to save to (y/n)")
+    default = input()
+
+    if default == 'y':
+        with open("Default Values/Default Save to Location.pk", 'wb') as fi:
+            pickle.dump(sal, fi)
+
+    elif default == 'n':
+        print()
+
+    else:
+        print("Defaulting to n.")
+
 print()
-sal = askdirectory()
+
+if exists("Default Values/Default Sampling Rate.pk"):
+    print()
+    print("Using the Default Sampling from the file Default Sampling Rate.pk! Delete this file if you do not want to "
+          + "use the default value anymore!")
+
+    with open("Default Values/Default Sampling Rate.pk", 'rb') as fi:
+        Sampling_rate = pickle.load(fi)
+
+    print("The default sampling rate is " + str(Sampling_rate))
+else:
+
+    print("#######################################################################################################")
+    print("Enter the Sampling Rate.")
+    print("#######################################################################################################")
+    sampling_rate = input()
+    Sampling_rate = float(sampling_rate)
+
+    print("Do you want save this as the default sampling rate? (y/n)")
+    default = input()
+
+    if default == 'y':
+        with open("Default Values/Default Sampling Rate.pk", 'wb') as fi:
+            pickle.dump(Sampling_rate, fi)
+
+    elif default == 'n':
+        print()
+
+    else:
+        print("Defaulting to n.")
+
+if exists("Default Values/Default Offset.pk"):
+    print()
+    print(
+            "Using the Default Offset from the file Default offset.pk! Delete this file if you do not want to "
+            + "use the default value anymore!")
+
+    with open("Default Values/Default Offset.pk", 'rb') as fi:
+        offset = pickle.load(fi)
+
+        print("The offset is " + str(offset))
+else:
+
+    print("#######################################################################################################")
+    print("Enter the amount of time the rat was exposed to the odor to for in seconds.")
+    print("#######################################################################################################")
+    offset = input()
+    offset = float(offset)
+
+    print("Do you want save this as the default offset? (y/n)")
+    default = input()
+
+    if default == 'y':
+        with open("Default Values/Default Offset.pk", 'wb') as fi:
+            pickle.dump(offset, fi)
+
+    elif default == 'n':
+        print()
+
+    else:
+        print("Defaulting to n.")
 
 if platform.system() == "Windows":
     save_to = sal + "\\" + ntpath.basename(val)
@@ -28,8 +115,7 @@ else:
 
 if __name__ == "__main__":
 
-    Sampling_rate = 18518.51851851852 * Hz
-    period = (1. / Sampling_rate).rescale(s)
+    period = (1 / Sampling_rate)
     Electrode_List = []
     Spike_times = {}
 
@@ -69,19 +155,10 @@ if __name__ == "__main__":
         event_list.append(x)
         time_list.append(float(y))
 
-    print(event_list)
-    print(time_list)
-    print("Enter the the amount of time the rat is exposed to the odor for, in seconds:")
-    offset = input()
-    offset = float(offset)
     time_list_temp = [x + offset for x in time_list]
-    print(time_list_temp)
     with h5py.File(save_to, 'w') as f:
         f.create_dataset("Odor_Names", len(event_list), data=event_list, compression="gzip")
         f.create_dataset("Odor_Onsets", len(time_list), data=time_list, compression="gzip")
         f.create_dataset("Odor_Offsets", len(time_list_temp), data=time_list_temp, compression="gzip")
         for i in Spike_times:
             f.create_dataset(i, len(Spike_times[i]), data=Spike_times[i], compression="gzip")
-
-    with h5py.File(save_to, 'r') as f:
-        print(f.get("Odor_Names")[:])

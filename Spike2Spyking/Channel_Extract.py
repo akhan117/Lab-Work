@@ -4,16 +4,16 @@ import ntpath
 import platform
 import pickle
 from os.path import exists
+from tkinter.filedialog import askopenfilename
 
 # Written by Ayaan Khan
 # This program extracts the channels you specify from the data Spike2Numpy. This program will not run correctly
 # without running Spike2Numpy and obtaining the data that it creates!
 
 if __name__ == "__main__":
+    print("Pick the file you want to extract channels from")
+    read_from = askopenfilename()
 
-    with open("Save to.pk", 'rb') as fi:
-        read_from = pickle.load(fi)
-    print(read_from)
 
     if exists("Default Values/Default Channels.pk"):
         print()

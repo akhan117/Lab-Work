@@ -122,6 +122,7 @@ if __name__ == "__main__":
                 u_data[i] = np.array([])
             u_data[i] = np.concatenate((u_data[i], u_data1[i]))
 
+    events_f = []
     # Organize the events by time and save them
     with open("Events.txt", 'w') as f:
         z = 0
@@ -132,15 +133,18 @@ if __name__ == "__main__":
             for event1 in range(0, len(event.times)):
 
                 timing = float(event.times[event1]) + to_add
+                events_f.append(np.string_(str(event.labels[event1])[2:-1]))
+                events_f.append(np.string_(str(timing)))
                 f.write(str(event.labels[event1])[2:-1] + ", " + str(timing) + '\n')
                 if event1 is len(events1.times) - 1:
                     to_add += float(events1.times[event1])
 
+    print(events_f)
     # Save the channel names and sampling rates
     with open("Channels.txt", 'w') as f:
         for ele in name_and_rate:
             f.write(str(ele) + '\n')
-
+    print(name_and_rate)
     # Obtain just the file names and remove the .smr extension from them
     file_list = [ntpath.basename(file) for file in file_list]
     for i in range(0, len(file_list)):
@@ -175,3 +179,4 @@ if __name__ == "__main__":
     with h5py.File(save_to, 'w') as f:
         for i in list(u_data):
             f.create_dataset(i, len(u_data[i]), data=u_data[i], compression="gzip")
+        f.create_dataset("Events", len(events_f), data=events_f, compression="gzip")
