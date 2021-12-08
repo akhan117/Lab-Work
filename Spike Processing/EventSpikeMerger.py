@@ -8,12 +8,23 @@ import ntpath
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import askdirectory
 import pickle
+import ntpath
 
 print("###############################################################################################################")
 print("Select the result-merged.hdf5 file from Spyking-Circus")
 print("###############################################################################################################")
 print()
 val = askopenfilename()
+valf = ntpath.basename(val)
+valf = valf[:-19]
+valf = valf.split(",")[-1]
+valf = valf.split()[1:]
+valfs = ""
+for i in valf:
+    valfs = valfs + i + " "
+
+
+
 
 if exists("Default Values/Default Save to Location.pk"):
     print()
@@ -132,33 +143,26 @@ if __name__ == "__main__":
 
             Spike_times[neuron] = reading_list
 
-    os.chdir("..")
-    events = os.path.abspath(os.curdir)
+    folder = "Event and Sampling Rates Data/" + valfs
+    eventsv = folder + "events.pk"
+    timesv = folder + "times.pk"
+    ratesv = folder + "rates.pk"
+    print(eventsv)
 
-    if platform.system() == "Windows":
-        events = events + "\\Spike2Spyking\\Events.txt"
+    with open(timesv, 'rb') as fi:
+        time_list = pickle.load(fi)
 
-    else:
-        events = events + "/Spike2Spyking/Events.txt"
+    with open(eventsv, 'rb') as fi:
+        event_list = pickle.load(fi)
 
-    with open(events, 'r') as f:
-        events_and_time = f.readlines()
-
-    events_and_time = [x[:-1] for x in events_and_time]
-    events_and_time = [x.split(',') for x in events_and_time]
-
-    event_list = []
-    time_list = []
-
-    for i in events_and_time:
-        [x, y] = i
-        event_list.append(x)
-        time_list.append(float(y))
-
+    time_list = list(map(float, time_list))
     time_list_temp = [x + offset for x in time_list]
+
+
     with h5py.File(save_to, 'w') as f:
         f.create_dataset("Odor_Names", len(event_list), data=event_list, compression="gzip")
         f.create_dataset("Odor_Onsets", len(time_list), data=time_list, compression="gzip")
         f.create_dataset("Odor_Offsets", len(time_list_temp), data=time_list_temp, compression="gzip")
+        neu = f.create_group("Neurons")
         for i in Spike_times:
-            f.create_dataset(i, len(Spike_times[i]), data=Spike_times[i], compression="gzip")
+            neu.create_dataset(i, len(Spike_times[i]), data=Spike_times[i], compression="gzip")

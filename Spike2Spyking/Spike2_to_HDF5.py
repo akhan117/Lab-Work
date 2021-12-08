@@ -7,6 +7,7 @@ import pickle
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import askdirectory
 from os.path import exists
+import os
 
 
 # Written by Ayaan Khan
@@ -139,12 +140,11 @@ if __name__ == "__main__":
                 if event1 is len(events1.times) - 1:
                     to_add += float(events1.times[event1])
 
-    print(events_f)
     # Save the channel names and sampling rates
     with open("Channels.txt", 'w') as f:
         for ele in name_and_rate:
             f.write(str(ele) + '\n')
-    print(name_and_rate)
+
     # Obtain just the file names and remove the .smr extension from them
     file_list = [ntpath.basename(file) for file in file_list]
     for i in range(0, len(file_list)):
@@ -173,6 +173,44 @@ if __name__ == "__main__":
 
     with open("Save to.pk", 'wb') as fi:
         pickle.dump(save_to, fi)
+
+    with open("Events.txt", 'r') as f:
+        events_and_time = f.readlines()
+
+    events_and_time = [x[:-1] for x in events_and_time]
+    events_and_time = [x.split(',') for x in events_and_time]
+
+    event_list = []
+    time_list = []
+
+    for i in events_and_time:
+        [x, y] = i
+        event_list.append(x)
+        time_list.append(float(y))
+
+
+
+    os.chdir("..")
+    events = os.path.abspath(os.curdir)
+
+    if platform.system() == "Windows":
+        times = events + "\\Spike Processing\\Event and Sampling Rates Data\\" + full_name + " times.pk"
+        rates = events + "\\Spike Processing\\Event and Sampling Rates Data\\" + full_name + " rates.pk"
+        events = events + "\\Spike Processing\\Event and Sampling Rates Data\\" + full_name + " events.pk"
+
+    else:
+        times = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " times.pk"
+        events = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " events.pk"
+        rates = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " rates.pk"
+
+    with open(events, "wb") as fi:
+        pickle.dump(event_list, fi)
+
+    with open(times, "wb") as fi:
+        pickle.dump(time_list, fi)
+
+    with open(rates, "wb") as fi:
+        pickle.dump(name_and_rate, fi)
 
     print("Working on saving and compressing the data.....")
     # Save to our file
