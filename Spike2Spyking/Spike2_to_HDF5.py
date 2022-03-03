@@ -10,13 +10,6 @@ from os.path import exists
 import os
 
 
-# Written by Ayaan Khan
-# This program takes data from two smr (Spike2) data files and combines them into an numpy array, which is saved to an
-# hdf5 file.
-# This is so that we can combine post and pre infusion readings into a single file.
-# Upon running, this program will create a config file and exit. Fill in the config file with the parameters it needs
-# and run the program again
-
 def spyke_to_numpy(file_name):
     print("Working on " + file_name + "......")
     # Typical Set up for Neo to access the file, and we only have one block and one segment
@@ -228,7 +221,7 @@ if __name__ == "__main__":
 
     inp = input()
     if inp == "y":
-        print("Press Enter for irrelevant/unknown fields")
+        print("Press Enter for irrelevant/unknown fields.")
 
         print("Enter the rats ID-")
         rat_name = input()
@@ -245,11 +238,12 @@ if __name__ == "__main__":
         print("Enter the name of the person who did the experiment-")
         name = input()
 
-    print("Working on saving and compressing the data.....")
+    print("Working on compressing and saving the data.....")
     # Save to our file
     with h5py.File(save_to, 'w') as f:
         for i in list(u_data):
             f.create_dataset(i, len(u_data[i]), data=u_data[i], compression="gzip")
+            print(i + " was saved to the HDF5 File.")
         f.create_dataset("Events", len(events_f), data=events_f, compression="gzip")
 
         try:
@@ -286,3 +280,4 @@ if __name__ == "__main__":
             pass
         else:
             f.create_dataset("Name", 1, data=name, compression="gzip")
+
