@@ -112,16 +112,23 @@ if __name__ == "__main__":
 
     u_data = {}
     events = []
-
+    split = []
     # Create Dictionary of combined data from all our files
     for file in file_list:
+        split_s = 0
+        file_index = file_list.index(file)
         u_data1, events1, name_and_rate = spyke_to_numpy(file)
         events.append(events1)
-
         for i in list(u_data1):
+            if len(file_list[file_index:]) != 1:
+                if len(u_data1[i]) > split_s:
+                    split_s = len(u_data1[i])
+
             if i not in u_data:
                 u_data[i] = np.array([])
             u_data[i] = np.concatenate((u_data[i], u_data1[i]))
+
+        split.append(split_s)
 
     events_f = []
     # Organize the events by time and save them
@@ -188,20 +195,21 @@ if __name__ == "__main__":
         event_list.append(x)
         time_list.append(float(y))
 
-
-
     os.chdir("..")
     events = os.path.abspath(os.curdir)
 
     if platform.system() == "Windows":
         times = events + "\\Spike Processing\\Event and Sampling Rates Data\\" + full_name + " times.pk"
         rates = events + "\\Spike Processing\\Event and Sampling Rates Data\\" + full_name + " rates.pk"
+        splits = events + "\\Spike Processing\\Event and Sampling Rates Data\\" + full_name + " splits.pk"
         events = events + "\\Spike Processing\\Event and Sampling Rates Data\\" + full_name + " events.pk"
+
 
     else:
         times = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " times.pk"
-        events = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " events.pk"
         rates = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " rates.pk"
+        splits = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " splits.pk"
+        events = events + "/Spike Processing/Event and Sampling Rates Data/" + full_name + " events.pk"
 
     with open(events, "wb") as fi:
         pickle.dump(event_list, fi)
@@ -212,9 +220,69 @@ if __name__ == "__main__":
     with open(rates, "wb") as fi:
         pickle.dump(name_and_rate, fi)
 
+    with open(splits, "wb") as fi:
+        pickle.dump(split, fi)
+
+    print()
+    print("Would you like to enter miscellaneous data such as the rat ID, dates etc? (y/n)")
+
+    inp = input()
+    if inp == "y":
+        print("Press Enter for irrelevant/unknown fields")
+
+        print("Enter the rats ID-")
+        rat_name = input()
+
+        print("Enter the name of the Experiment-")
+        Experiment_name = input()
+
+        print("Enter the Experimental Group-")
+        Experimental_group = input()
+
+        print("Enter the date of the experiment-")
+        date = input()
+
+        print("Enter the name of the person who did the experiment-")
+        name = input()
+
     print("Working on saving and compressing the data.....")
     # Save to our file
     with h5py.File(save_to, 'w') as f:
         for i in list(u_data):
             f.create_dataset(i, len(u_data[i]), data=u_data[i], compression="gzip")
         f.create_dataset("Events", len(events_f), data=events_f, compression="gzip")
+
+        try:
+            rat_name
+        except NameError:
+            pass
+        else:
+            f.create_dataset("RatID", 1, data=rat_name, compression="gzip")
+
+        try:
+            Experiment_name
+        except NameError:
+            pass
+        else:
+            f.create_dataset("ExperimentName", 1, data=Experiment_name, compression="gzip")
+
+        try:
+            Experimental_group
+        except NameError:
+            pass
+        else:
+            f.create_dataset("ExperimentalGroup", 1, data=Experimental_group, compression="gzip")
+
+        try:
+            date
+        except NameError:
+            pass
+        else:
+            f.create_dataset("Date", 1, data=date, compression="gzip")
+
+        try:
+            name
+        except NameError:
+            pass
+        else:
+            f.create_dataset("Name", 1, data=name, compression="gzip")

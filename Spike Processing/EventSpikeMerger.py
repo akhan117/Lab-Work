@@ -155,9 +155,10 @@ if __name__ == "__main__":
     with open(eventsv, 'rb') as fi:
         event_list = pickle.load(fi)
 
+    print(event_list)
+    print(time_list)
     time_list = list(map(float, time_list))
     time_list_temp = [x + offset for x in time_list]
-
 
     with h5py.File(save_to, 'w') as f:
         f.create_dataset("Odor_Names", len(event_list), data=event_list, compression="gzip")
