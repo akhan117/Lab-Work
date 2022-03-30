@@ -145,9 +145,10 @@ def cheby2_bp_filter(data, fs, low, hi, order=4, rs=40, axis=-1):
         axis along which data is filtered
     """
     nyquist = 0.5 * fs
-    c = 0
+    c = 7
     # c = 5
-    rsf_low, rsf_hi = (low-c)/nyquist, (hi+c)/nyquist
+    low = low-c if low-c > 1 else 1
+    rsf_low, rsf_hi = (low)/nyquist, (hi+c)/nyquist
     # rsf contains the frequencies at which the signal is attenuated to rs
     rsf = [np.float(rsf_low), np.float(rsf_hi)]
     b, a = cheby2(order, rs, rsf, 'bandpass')
