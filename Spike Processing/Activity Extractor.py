@@ -16,6 +16,7 @@ for i in letters:
     for j in letters:
         lettersExpanded.append(i + j)
 
+omegaCheck = 0
 sheetList = []
 if __name__ == "__main__":
 
@@ -61,12 +62,8 @@ if __name__ == "__main__":
             timeList = pickle.load(fi)
 
         eventTime = []
-        print(eventList)
-        print(timeList)
         for i in range(0, len(eventList)):
             eventTime.append((eventList[i], timeList[i]))
-
-        print(eventTime)
 
         splits_list = splits_list[:-1]
         splits_list.insert(0, 0.0)
@@ -166,25 +163,27 @@ if __name__ == "__main__":
 
             miniCount = str(megaCount)
             ws = wb.active
-
-            ws['A' + miniCount] = ntpath.basename(file)
-            ws['D' + miniCount] = "Neuron ID"
-            ws["B" + miniCount] = "Start Time"
-            ws["B" + str(megaCount + 1)] = start
-            ws["C" + miniCount] = "Duration"
-            ws["C" + str(megaCount + 1)] = length
-            ws["E" + miniCount] = "Pre Infusion Spikes"
-            ws["F" + miniCount] = "Post Infusion Spikes"
+            if omegaCheck == 0:
+                ws['A' + miniCount] = "File Name"
+                ws['D' + miniCount] = "Neuron ID"
+                ws["B" + miniCount] = "Start Time"
+                ws["C" + miniCount] = "Duration"
+                ws["E" + miniCount] = "Pre Infusion Spikes"
+                ws["F" + miniCount] = "Post Infusion Spikes"
+                omegaCheck = 1
 
             counter = megaCount + 1
             for i in neuro_pre:
+                ws['A' + str(counter)] = ntpath.basename(file)
+                ws["B" + str(counter)] = start
+                ws["C" + str(counter)] = length
                 ws['D' + str(counter)] = i
                 ws['E' + str(counter)] = neuro_pre[i][0]
                 ws['F' + str(counter)] = neuro_post[i][0]
                 counter += 1
 
             wb.save(excelName)
-            megaCount += len(neurons) + 2
+            megaCount += len(neurons)
 
         ################################################################################################################
         elif option == '2':
@@ -242,7 +241,6 @@ if __name__ == "__main__":
                 OdorList.add(n)
                 odorData[n] = []
 
-            print(odorData)
 
             binDivB = []
             binDivA = []
@@ -272,9 +270,6 @@ if __name__ == "__main__":
                 binTimingsPre.append((i[0], temp))
                 binTimingsPost.append((i[0], temp2))
 
-            print(binTimingsPre)
-            print(binTimingsPost)
-
             prIprO = {}
             pIprO = {}
             prIpO = {}
@@ -294,7 +289,6 @@ if __name__ == "__main__":
                 full_list_pIpO = []
 
                 count += 1
-                print(len(n1))
                 for [odor, timing] in binTimingsPre:
                     temp1 = [odor]
                     temp2 = [odor]
@@ -354,335 +348,115 @@ if __name__ == "__main__":
                 prIpO[neuron_ID] = full_list_prIpO
                 pIpO[neuron_ID] = full_list_pIpO
 
-            print(full_list_prIprO)
-            print(prIprO)
-            print(pIprO)
-            print(prIpO)
-            print(pIpO)
-
             miniCount = str(megaCount)
-            miniCountp = str(megaCount + 1)
+            if omegaCheck == 0:
+                ws['A' + miniCount] = "File Name"
+                ws['B' + miniCount] = "Pre Odor Bins"
+                ws['C' + miniCount] = "Post Odor Interval Size"
+                ws['D' + miniCount] = "Bin Size"
+                ws['E' + miniCount] = "Odor Identity"
+                ws['F' + miniCount] = "Neuron_ID"
 
-            ws['A' + miniCount] = "File Name"
-            ws['A' + miniCountp] = ntpath.basename(file)
-            ws['B' + miniCount] = "Pre Odor Bins"
-            ws['B' + miniCountp] = binNoB
-            ws['C' + miniCount] = "Post Odor Interval Size"
-            ws['C' + miniCountp] = binNoA
-            ws['D' + miniCount] = "Bin Size"
-            ws['D' + miniCountp] = binSize
-            ws['E' + miniCount] = "Odor Identity"
-            ws['F' + miniCount] = "Neuron_ID"
-            ws['G' + miniCount] = "Pre Inf Pre Odor Spikes"
-            ws['H' + miniCount] = "Pre Inf Post Odor Spikes"
-            ws['I' + miniCount] = "Post Inf Pre Odor Spikes"
-            ws['J' + miniCount] = "Post Inf Post Odor Spikes"
+
+                clet = lettersExpanded.index('G')
+                count = 1
+                for i in range(0, binNoB):
+                    ws[lettersExpanded[clet] + miniCount] = "PriPrO Bin " + str(count)
+                    clet += 1
+                    count += 1
+
+                count = 1
+                for i in range(0, binNoA):
+                    ws[lettersExpanded[clet] + miniCount] = "PriPO Bin " + str(count)
+                    clet += 1
+                    count += 1
+
+                ws[lettersExpanded[clet] + miniCount] = "Odor Identity"
+                clet += 1
+                ws[lettersExpanded[clet] + miniCount] = "Neuron_ID"
+                clet += 1
+
+                count = 1
+                for i in range(0, binNoB):
+                    ws[lettersExpanded[clet] + miniCount] = "PiPrO Bin " + str(count)
+                    clet += 1
+                    count += 1
+
+                count = 1
+                for i in range(0, binNoA):
+                    ws[lettersExpanded[clet] + miniCount] = "PiPO Bin " + str(count)
+                    clet += 1
+                    count += 1
+
+                omegaCheck = 1
 
             something = megaCount + 1
             something1 = something
+            something2 = something
+            something3 = something
             keys = prIprO.keys()
             keys = sorted(keys)
             buffer = len(keys) + 1
+
             for i in keys:
                 count = 0
                 for j in prIprO[i]:
                     ws['E' + str(something)] = j[0]
                     ws['F' + str(something)] = i
-                    ws['G' + str(something)] = str(j[1:])
+                    clet = lettersExpanded.index('G')
+                    for k in j[1:]:
+                        ws[lettersExpanded[clet] + str(something)] = k
+                        clet += 1
 
+                    ws['A' + str(something)] = ntpath.basename(file)
+                    ws['B' + str(something1)] = binNoB
+                    ws['C' + str(something1)] = binNoA
+                    ws['D' + str(something1)] = binSize
                     something += 1
 
+                ct = clet
                 for j in prIpO[i]:
                     ws['E' + str(something1)] = j[0]
                     ws['F' + str(something1)] = i
-                    ws['H' + str(something1)] = str(j[1:])
+                    clet = ct
+                    for k in j[1:]:
+                        ws[lettersExpanded[clet] + str(something1)] = k
+                        clet += 1
 
+                    ws['A' + str(something1)] = ntpath.basename(file)
+                    ws['B' + str(something1)] = binNoB
+                    ws['C' + str(something1)] = binNoA
+                    ws['D' + str(something1)] = binSize
                     something1 += 1
 
-            something = max(something, something1) + 1
-            something1 = something
-
-            for i in keys:
-                count = 0
+                ct = clet
                 for j in pIprO[i]:
-                    ws['E' + str(something)] = j[0]
-                    ws['F' + str(something)] = i
-                    ws['I' + str(something)] = str(j[1:])
+                    clet = ct
+                    ws[lettersExpanded[clet] + str(something2)] = j[0]
+                    clet += 1
 
-                    something += 1
+                    ws[lettersExpanded[clet] + str(something2)] = i
+                    clet += 1
 
+                    for k in j[1:]:
+                        ws[lettersExpanded[clet] + str(something2)] = k
+                        clet += 1
+
+                    ws['A' + str(something2)] = ntpath.basename(file)
+                    ws['B' + str(something2)] = binNoB
+                    ws['C' + str(something2)] = binNoA
+                    ws['D' + str(something2)] = binSize
+                    something2 += 1
+
+                ct = clet
                 for j in pIpO[i]:
-                    ws['E' + str(something1)] = j[0]
-                    ws['F' + str(something1)] = i
-                    ws['J' + str(something1)] = str(j[1:])
+                    clet = ct
+                    for k in j[1:]:
+                        ws[lettersExpanded[clet] + str(something3)] = k
+                        clet += 1
 
-                    something1 += 1
+                    something3 += 1
 
-            # for i in prIprO:
-            #     ws['E' + str(something)] = i[0]
-            #     ncount = 1
-            #     small = something
-            #     for j in i[1:]:
-            #
-            #         ws['G' + str(small)] = j
-            #         ws['F' + str(small)] = "Neuron_" + str(ncount)
-            #
-            #         ncount += 1
-            #         small += 1
-            #
-            #     something += ncount
-
-            something = max(something, something1)
-            print(len(prIprO["neuron_1"]))
-            print(len(prIpO["neuron_1"]))
-            print(splitn)
-            megaCount = something + 1
+            something = max(something, something1, something2, something3)
+            megaCount = something - 1
             wb.save(excelName)
-
-    # ####################################################################################################################
-    # elif option == '2':
-    #     print("How many seconds before and after the Odors?")
-    #     inp = input()
-    #     inp = int(inp)
-    #     print()
-    #     nameset = set(names)
-    #     count = 1
-    #     for i in nameset:
-    #         print(str(count) + "." + str(i))
-    #         count += 1
-    #
-    #     print()
-    #     print("Enter the numbers of the odors(e.g - 1 2 5) you want, leave blank for all odors")
-    #     var = input()
-    #
-    #     if var:
-    #         var = var.split(" ")
-    #         var = [int(i) for i in var]
-    #         var = [i - 1 for i in var]
-    #         var = sorted(var)
-    #         selected_names = []
-    #         for i in var:
-    #             selected_names.append(list(nameset)[i])
-    #
-    #         print("The Odors selected are :" + str(selected_names))
-    #
-    #     else:
-    #         selected_names = list(nameset)
-    #         print("The Odor selected are :" + str(selected_names))
-    #
-    #     print(nslist)
-    #     name_times = {}
-    #     for i in selected_names:
-    #         name_times[i] = []
-    #         for (j, k) in nslist:
-    #             if i == j:
-    #                 name_times[i].append(k)
-    #
-    #     print()
-    #
-    #     name_freq_pre = {}
-    #     name_freq_pre2 = {}
-    #     name_freq_post = {}
-    #     name_freq_post2 = {}
-    #     for j in name_times:
-    #         name_freq_pre2[str(j)] = {}
-    #         name_freq_post2[str(j)] = {}
-    #         count = 1
-    #         for i in neurons:
-    #             name = str(j)
-    #             name = name + "_" + str(count)
-    #             numb = str(count)
-    #             name_freq_pre[name] = []
-    #             name_freq_post[name] = []
-    #             name_freq_pre2[str(j)][numb] = []
-    #             name_freq_post2[str(j)][numb] = []
-    #
-    #             count += 1
-    #
-    #     for j in name_times:
-    #         count = 1
-    #         for i in neurons:
-    #             name = str(j)
-    #             name = name + "_" + str(count)
-    #             for timing in name_times[j]:
-    #                 ls = []
-    #                 ls2 = []
-    #                 for n1 in i:
-    #                     if timing - inp < n1 < timing + inp:
-    #                         if n1 < splitn:
-    #                             ls.append(n1)
-    #                         else:
-    #                             ls2.append(n1)
-    #                 length = len(ls)
-    #                 length2 = len(ls2)
-    #                 if length != 0:
-    #                     name_freq_pre2[str(j)][str(count)].append(length)
-    #                     name_freq_pre[name].append(length)
-    #                 elif length2 != 0:
-    #                     name_freq_post2[str(j)][str(count)].append(length2)
-    #                     name_freq_post[name].append(length2)
-    #
-    #             count += 1
-    #
-    #     print("Pre Drugs:" + str (name_freq_pre2))
-    #     print("Post Drugs:" + str (name_freq_post2))
-    #
-    #     #EXCEL
-    #     wb = Workbook()
-    #     sheet_list = []
-    #     ws = wb.active
-    #
-    #     keys = name_freq_pre2.keys()
-    #     keylist = list(keys)
-    #     ws.title = str(keylist[0])
-    #     sheet_list.append(ws)
-    #     for i in keylist[1:]:
-    #
-    #         sheet_list.append(wb.create_sheet(str(i)))
-    #
-    #     max = []
-    #     for i in sheet_list:
-    #         wb.active = i
-    #         count = 1
-    #         i['A1'] = i.title
-    #         max1 = 0
-    #         for j in name_freq_pre2[i.title]:
-    #             cell1 = letters[count] + str(1)
-    #             i[cell1] = 'Neuron' + str(count)
-    #             count2 = 2
-    #
-    #             for k in name_freq_pre2[i.title][j]:
-    #                 cell = letters[count] + str(count2)
-    #                 i[cell] = k
-    #                 count2 += 1
-    #                 if max1 < count2:
-    #                     max1 = count2
-    #
-    #             count2 += 1
-    #             i['A' + str(count2)] = "Postinfusion"
-    #
-    #             for k in name_freq_post2[i.title][j]:
-    #                 cell = letters[count] + str(count2)
-    #                 i[cell] = k
-    #                 count2 += 1
-    #                 if max1 < count2:
-    #                     max1 = count2
-    #
-    #
-    #             count += 1
-    #         max.append(max1)
-    #     print(max)
-    #
-    #
-    #
-    #
-    #
-    #     wb.save(r'C:\Users\Ayaan\Desktop\Lab-Data\Excel\Odor Activity.xlsx')
-
-    ####################################################################################################################
-    # count = 2
-    # sum = []
-    # for i in neurons:
-    #     cell = 'A' + str(count)
-    #     ws[cell] = 'Neuron_' + str(count - 1)
-    #     count += 1
-    #
-    # count = 0
-    # temp = name_freq_pre2.keys()
-    # for i in temp:
-    #     cell = letters[count + 1] + '1'
-    #     ws[cell] = str(i)
-    #     count += 1
-    #
-    # count = 1
-    # for i in name_freq_pre2:
-    #     count2 = 2
-    #     char = letters[count]
-    #     for j in name_freq_pre2[i]:
-    #         cell = char + str(count2)
-    #         ws[cell] = str(name_freq_pre2[i][j])
-    #         count2 += 1
-    #     count += 1
-
-    # neuronTimingPrIPrO = {}
-    # neuronTimingPrIPO = {}
-    # neuronTimingPIPrO = {}
-    # neuronTimingPIPO = {}
-    #
-    # count = 1
-    #
-    # for o in OdorList:
-    #     neuronTimingPrIPrO[o] = {}
-    #     neuronTimingPrIPO[o] = {}
-    #     neuronTimingPIPrO[o] = {}
-    #     neuronTimingPIPO[o] = {}
-    #     count1 = 1
-    #     for n in neurons:
-    #         name = "neuron_" + str(count1)
-    #         neuronTimingPrIPrO[o][name] = []
-    #         neuronTimingPrIPO[o][name] = []
-    #         neuronTimingPIPrO[o][name] = []
-    #         neuronTimingPIPO[o][name] = []
-    #         count1 += 1
-    #
-    # for o in neuronTimingPrIPrO:
-    #     count = 1
-    #     for n in neurons:
-    #         name = "neuron_" + str(count)
-    #
-    #         for b in binTimingsPre:
-    #             for binT in range(0, len(b[1]) - 1):
-    #                 lengthPrIPrO = 0
-    #                 lengthPIPrO = 0
-    #
-    #                 for n1 in n:
-    #                     if b[1][binT] < n1 < b[1][binT + 1] and b[0] == str(o)[2:-1]:
-    #                         if n1 < splitn:
-    #                             lengthPrIPrO += 1
-    #                         else:
-    #                             lengthPIPrO += 1
-    #
-    #                 if b[0] == str(o)[2:-1]:
-    #                     neuronTimingPrIPrO[o][name].append(lengthPrIPrO)
-    #                 if b[0] == str(o)[2:-1]:
-    #                     neuronTimingPIPrO[o][name].append(lengthPIPrO)
-    #
-    #         for b in binTimingsPost:
-    #             for binT in range(0, len(b[1]) - 1):
-    #                 lengthPrIPO = 0
-    #                 lengthPIPO = 0
-    #
-    #                 for n1 in n:
-    #                     if b[1][binT] < n1 < b[1][binT + 1] and b[0] == str(o)[2:-1]:
-    #                         if n1 < splitn:
-    #                             lengthPrIPO += 1
-    #                         else:
-    #                             lengthPIPO += 1
-    #
-    #                 if b[0] == str(o)[2:-1]:
-    #                     neuronTimingPrIPO[o][name].append(lengthPrIPO)
-    #                 if b[0] == str(o)[2:-1]:
-    #                     neuronTimingPIPO[o][name].append(lengthPIPO)
-    #
-    #         count += 1
-
-    #
-    # for i in neuronTimingPrIPrO:
-    #     for j in neuronTimingPrIPrO[i]:
-    #         sum1 = sum(neuronTimingPrIPrO[i][j])
-    #         neuronTimingPrIPrO[i][j] = sum1
-    #
-    # for i in neuronTimingPIPrO:
-    #     for j in neuronTimingPIPrO[i]:
-    #         sum1 = sum(neuronTimingPIPrO[i][j])
-    #         neuronTimingPIPrO[i][j] = sum1
-    #
-    # for i in neuronTimingPrIPO:
-    #     for j in neuronTimingPrIPO[i]:
-    #         sum1 = sum(neuronTimingPrIPO[i][j])
-    #         neuronTimingPrIPO[i][j] = sum1
-    #
-    # for i in neuronTimingPIPO:
-    #     for j in neuronTimingPIPO[i]:
-    #         sum1 = sum(neuronTimingPIPO[i][j])
-    #         neuronTimingPIPO[i][j] = sum1

@@ -86,7 +86,7 @@ if __name__ == "__main__":
     read_from1, read_from2 = ntpath.split(read_from)
 
     location = read_from1 + '/' + channels_present + ' ' + read_from2
-
+    print(np.shape(combined_data))
     print("Combining the channels....")
     # Save the file with the extracted channels
     with h5py.File(location, 'w') as f:

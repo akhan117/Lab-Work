@@ -281,3 +281,5 @@ if __name__ == "__main__":
         else:
             f.create_dataset("Name", 1, data=name, compression="gzip")
 
+    print(events_f)
+
