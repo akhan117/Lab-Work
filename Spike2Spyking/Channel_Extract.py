@@ -14,7 +14,6 @@ if __name__ == "__main__":
     print("Pick the file you want to extract channels from")
     read_from = askopenfilename()
 
-
     if exists("Default Values/Default Channels.pk"):
         print()
         print("Using the Default Values from the file Default Channels.pk! Delete this file if you do not want to use "
@@ -34,7 +33,8 @@ if __name__ == "__main__":
         for i in range(0, len(channel_list)):
             channel_list[i] = channel_list[i].strip()
 
-        print("Do you want save these channels as the default channels to extract? (y/n)")
+        print(
+            "Do you want to save these channels as the default channels to extract? (y/n)")
         default = input()
 
         if default == 'y':
@@ -91,4 +91,5 @@ if __name__ == "__main__":
     # Save the file with the extracted channels
     with h5py.File(location, 'w') as f:
         # We save all the data in one data set because spyking-circus seems to use only 1 data-set from a hdf5 file
-        f.create_dataset("unit", np.shape(combined_data), data=combined_data, compression="gzip")
+        f.create_dataset("unit", np.shape(combined_data),
+                         data=combined_data, compression="gzip")
