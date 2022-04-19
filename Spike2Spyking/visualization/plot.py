@@ -157,7 +157,7 @@ def get_events(selected_file):
     return events_tuple
 
 
-def plot_LFP(selected_file, channel_list, time_min, time_max, rates_map, events_tuple, smoothing=5):
+def plot_LFP(selected_file, channel_list, time_min, time_max, rates_map, events_tuple, smoothing=1000):
     print("Plotting LFP")
 
     remaining_channels = channel_list.copy()
@@ -204,7 +204,7 @@ def spectrogram(selected_file, channel_list, freq_min, freq_max, time_min, time_
                 noverlap = nfft/2
 
                 plotter.plot_spectrogram(
-                    local_data, local_sampling_rate, events_tuple, channel, time_min, time_max, freq_min, freq_max, nfft=nfft, noverlap=noverlap, log_scale=False)
+                    local_data, local_sampling_rate, events_tuple, channel, time_min, time_max, freq_min, freq_max, nfft=nfft, noverlap=noverlap, log_scale=True)
 
     if len(remaining_channels) > 0:
         print(

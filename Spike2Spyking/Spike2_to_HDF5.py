@@ -45,7 +45,8 @@ def magnitude_odor_significance(abs_d_arr, i_start, i_range, i_step, sample_size
         try:
             group1 = abs_d_arr[t:t+sample_size]
             group2 = abs_d_arr[t-sample_distance-sample_size:t-sample_distance]
-            _, p = scipy.stats.ttest_ind(group1, group2, equal_var=False)
+            _, p = scipy.stats.ttest_ind(
+                group1, group2, equal_var=False, alternative="greater")
             mag_p.append(p)
         except IndexError:
             continue
@@ -58,23 +59,23 @@ def onset_timestamp(ps, time_step, t):
     return np.argmin(ps, axis=0) * time_step + t
 
 
-def odor_onset(respirat_arr, events, fs, fmin=1, fmax=12):
+def odor_onset(respirat_arr, events, fs, fmin=1, fmax=10):
     """
     return ordor onset timestamps
     """
     time_step = 0.1  # sample every 100 ms
     time_step_i = int(time_step * fs)
-    time_frame = 7  # sample first 5000 ms of odor presentation
+    time_frame = 10  # sample first 10000 ms of odor presentation
     time_frame_i = int(time_frame * fs)
-    sample_interval = 2  # sample in groups of 3000 ms data
+    sample_interval = 1.5  # sample in groups of 1500 ms data
     sample_interval_i = int(sample_interval * fs)
-    group_distances = 2  # t test groups time distance
+    group_distances = 1  # t test groups time distance
     group_distances_i = int(group_distances * fs)
 
     respirat_arr = filters.cheby2_bp_filter(
         respirat_arr, fs, fmin, fmax)  # filter band pass
     respirat_arr = scipy.ndimage.gaussian_filter(
-        respirat_arr, sigma=fs/50, mode="nearest")  # blur to remove high frequency noise
+        respirat_arr, sigma=fs/5, mode="nearest", truncate=4)  # blur to remove high frequency noise
     derivative_arr = (np.roll(respirat_arr, -1) - respirat_arr) * fs
     abs_derivative_arr = np.abs(derivative_arr)
 
@@ -90,6 +91,8 @@ def odor_onset(respirat_arr, events, fs, fmin=1, fmax=12):
         #     respirat_arr, time_i, time_frame_i, time_step_1, sample_interval_i, group_distances_i)
         mag_p = magnitude_odor_significance(
             abs_derivative_arr, time_i, time_frame_i, time_step_i, sample_interval_i, group_distances_i)
+        mag_p = scipy.ndimage.gaussian_filter(
+            mag_p, sigma=2, mode="constant", cval=1)
         cross_p = mag_p
 
         local_onset_t = onset_timestamp(cross_p, time_step, t)

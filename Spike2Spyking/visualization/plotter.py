@@ -147,5 +147,5 @@ def plot_spectrogram(data, fs, events_tuple, channel="", tmin=-1, tmax=-1, fmin=
 
     for t1 in valve_onsets:
         plt.axvline(t1, ymin=0, ymax=0.1, color="gray",
-                    linestyle="-", linewidth=1, alpha=0.7)
+                    linestyle="-", linewidth=2, alpha=0.9)
     plt.show()
